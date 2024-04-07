@@ -1,4 +1,4 @@
-package com.immobyletteapimain;
+package com.immobylette.api.main;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

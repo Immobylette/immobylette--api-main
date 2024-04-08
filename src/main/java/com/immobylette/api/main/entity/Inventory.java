@@ -7,42 +7,35 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "third_parties")
+@Table(name = "inventories")
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Address {
+public class Inventory {
     @Id
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "number")
-    private Integer number;
+    @Column(name = "inventory_date")
+    private String inventoryDate;
 
-    @Column(name = "street")
-    private String street;
+    @JoinColumn(name = "fk_inventory_type")
+    @ManyToOne
+    private InventoryType fkInventoryType;
 
-    @Column(name = "zip")
-    private Integer zip;
+    @JoinColumn(name = "fk_lease")
+    @ManyToOne
+    private Lease fkLease;
 
-    @Column(name = "city")
-    private String city;
+    @JoinColumn(name = "fk_third_party")
+    @ManyToOne
+    private ThirdParty agent;
 
-    @Column(name = "floor")
-    private Integer floor;
-
-    @Column(name = "extra")
-    private String extra;
-
-    @Column(name = "latitude")
-    private Float latitude;
-
-    @Column(name = "longitude")
-    private Float longitude;
-
+    @OneToMany(mappedBy = "inventory")
+    private List<SignatureInventoryThirdParty> signatures;
 }

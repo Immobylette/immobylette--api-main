@@ -11,37 +11,38 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name = "third_parties")
+@Table(name = "addresses")
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Lease {
+public class Address {
     @Id
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "creation_date")
-    private Date creationDate;
+    @Column(name = "number")
+    private Integer number;
 
-    @Column(name = "rental_start_date")
-    private Date rentalStartDate;
+    @Column(name = "street")
+    private String street;
 
-    @Column(name = "nb_keys")
-    private Integer nbKeys;
+    @Column(name = "zip")
+    private Integer zip;
 
-    @Column(name = "end_date")
-    private Date endDate;
+    @Column(name = "city")
+    private String city;
 
-    @JoinColumn(name = "fk_owner")
-    @ManyToOne
-    private ThirdParty owner;
+    @Column(name = "floor")
+    private Integer floor;
 
-    @JoinColumn(name = "fk_tenant")
-    @ManyToOne
-    private ThirdParty tenant;
+    @Column(name = "extra")
+    private String extra;
 
-    @JoinColumn(name = "fk_property")
-    @ManyToOne
-    private Property property;
+    @Column(name = "latitude")
+    private Float latitude;
+
+    @Column(name = "longitude")
+    private Float longitude;
+
 }

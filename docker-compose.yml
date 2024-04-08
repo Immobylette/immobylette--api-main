@@ -3,7 +3,7 @@ services:
   app:
     image: immobylette-api-main:latest
     build:
-      context: .
+      context: src/main/java/com/immobylette/api/main/service
     ports:
       - 8080:8080
       - 8081:8081

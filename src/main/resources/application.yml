@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: immobylette--api-main
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:immobylette}
+    username: ${DB_USER:postgre}
+    password: ${DB_PASSWORD:fakesecret}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+    baselineOnMigrate: true
+    validateOnMigrate: true
+    locations:
+      - classpath:db/init
+      - classpath:db/migration
+  jpa:
+    generate-ddl: false
+    show-sql: true
+    hibernate.ddl-auto: none
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1

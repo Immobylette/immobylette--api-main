@@ -9,8 +9,8 @@ import jakarta.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name = "third_party_types")
-public class ElementType {
+@Table(name = "element_attributes")
+public class ElementAttribute {
 
     @Id
     @Column(name = "id")

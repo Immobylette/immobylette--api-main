@@ -11,35 +11,16 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name = "third_parties")
+@Table(name = "room_types")
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ThirdParty {
+public class RoomType {
     @Id
     @Column(name = "id")
     private UUID id;
 
     @Column(name = "surname")
-    private String surname;
-
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "ref_photo")
-    private UUID refPhoto;
-
-    @Column(name = "birth_date")
-    private Date birthDate;
-
-    @Column(name = "bank_details")
-    private String bankDetails;
-
-    @Column(name = "social_security_number")
-    private String socialSecurityNumber;
-
-    @JoinColumn(name = "fk_third_party_type")
-    @ManyToOne
-    private ThirdPartyType thirdPartyType;
+    private String label;
 }

@@ -9,33 +9,43 @@ import java.util.Map;
 import java.util.UUID;
 
 @Entity
-@Table(name = "third_party_types")
-public class Element {
+@Table(name = "rooms")
+public class Room {
 
     @Id
     @Column(name = "id")
     private UUID id;
 
-    @Type(PostgreSQLHStoreType.class)
-    @Column(columnDefinition = "hstore", name = "attributes")
-    private Map<String, String> attributes = Map.of();
+    @Column(name = "description")
+    private String description;
 
-    @Column(name = "ref_photo")
-    private String photo;
+    @Column(name = "area")
+    private Float area;
 
-    @Column(name = "ref_photo_folder")
-    private String photoFolder;
+    @Column(name = "nb_walls")
+    private Integer nbWalls;
 
-    @JoinColumn(name = "fk_element_parent")
+    @Column(name = "nb_doors")
+    private Integer nbDoors;
+
+    @Column(name = "nb_windows")
+    private Integer nbWindows;
+
+    @Column(name = "reference")
+    private String reference;
+
+    @Column(name = "number_order")
+    private Integer numberOrder;
+
+    @JoinColumn(name = "fk_allocation")
     @ManyToOne
-    private Element parent;
+    private Allocation fkAllocation;
 
-    @JoinColumn(name = "fk_element_type")
+    @JoinColumn(name = "fk_room_type")
     @ManyToOne
-    private ElementType fkElementType;
+    private RoomType fkRoomType;
 
-    @JoinColumn(name = "fk_room")
+    @JoinColumn(name = "fk_property")
     @ManyToOne
-    private Room fkRoom;
-
+    private Property fkProperty;
 }

@@ -9,10 +9,11 @@ import jakarta.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name = "third_party_types")
-public class PropertyType {
+@Table(name = "inventory_types")
+public class InventoryType {
 
     @Id
+    @Column(name = "id")
     private UUID id;
 
     @Column(name = "label")

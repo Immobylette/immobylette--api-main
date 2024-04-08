@@ -11,12 +11,12 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name = "third_parties")
+@Table(name = "properties")
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ThirdParty {
+public class Property {
     @Id
     @Column(name = "id")
     private UUID id;

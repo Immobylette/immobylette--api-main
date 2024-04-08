@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +23,7 @@ public class Inventory {
     private UUID id;
 
     @Column(name = "inventory_date")
-    private String inventoryDate;
+    private Date inventoryDate;
 
     @JoinColumn(name = "fk_inventory_type")
     @ManyToOne

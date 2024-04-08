@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -44,4 +45,7 @@ public class Lease {
     @JoinColumn(name = "fk_property")
     @ManyToOne
     private Property property;
+
+    @OneToMany(mappedBy = "lease")
+    private List<SignatureLeaseThirdParty> signatures;
 }

@@ -26,11 +26,11 @@ public class Inventory {
 
     @JoinColumn(name = "fk_inventory_type")
     @ManyToOne
-    private InventoryType fkInventoryType;
+    private InventoryType inventoryType;
 
     @JoinColumn(name = "fk_lease")
     @ManyToOne
-    private Lease fkLease;
+    private Lease lease;
 
     @JoinColumn(name = "fk_third_party")
     @ManyToOne

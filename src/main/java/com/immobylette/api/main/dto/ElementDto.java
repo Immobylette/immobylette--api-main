@@ -19,7 +19,7 @@ public class ElementDto {
 
     private String type;
 
-    private String photo;
+    private UUID photo;
 
     private Map<String, String> attributes;
 

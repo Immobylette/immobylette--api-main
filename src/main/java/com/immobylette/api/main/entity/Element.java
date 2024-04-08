@@ -21,10 +21,10 @@ public class Element {
     private Map<String, String> attributes = Map.of();
 
     @Column(name = "ref_photo")
-    private String photo;
+    private UUID photo;
 
     @Column(name = "ref_photo_folder")
-    private String photoFolder;
+    private UUID photoFolder;
 
     @JoinColumn(name = "fk_element_parent")
     @ManyToOne
@@ -32,10 +32,10 @@ public class Element {
 
     @JoinColumn(name = "fk_element_type")
     @ManyToOne
-    private ElementType fkElementType;
+    private ElementType elementType;
 
     @JoinColumn(name = "fk_room")
     @ManyToOne
-    private Room fkRoom;
+    private Room room;
 
 }

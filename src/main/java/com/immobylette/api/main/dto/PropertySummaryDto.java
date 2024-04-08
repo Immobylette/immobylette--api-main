@@ -1,6 +1,7 @@
 package com.immobylette.api.main.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,10 +12,19 @@ import java.util.UUID;
 public class PropertySummaryDto {
 
     private UUID id;
-    private String property_class;
-    private String property_type;
+
+    @JsonProperty("property_class")
+    private String propertyClass;
+
+    @JsonProperty("property_type")
+    private String propertyType;
+
     private AddressDto address;
-    private Boolean currently_inventory;
+
+    @JsonProperty("curent_inventory")
+    private Boolean curentInventory;
+
     private float distance;
-    private String photo;
+
+    private UUID photo;
 }

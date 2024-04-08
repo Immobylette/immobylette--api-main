@@ -9,7 +9,8 @@ import lombok.Getter;
 public enum ThirdPartyTypeEnum {
 
     AGENT("AGENT"),
-    TENANT("TENANT");
+    TENANT("TENANT"),
+    OWNER("OWNER");
 
     private final String name;
 }

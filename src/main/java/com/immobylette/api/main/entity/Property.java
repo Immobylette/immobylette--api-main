@@ -21,23 +21,20 @@ public class Property {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "surname")
-    private String surname;
+    @Column(name = "creation_date")
+    private Date creationDate;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "surface")
+    private float surface;
+
+    @Column(name = "nb_rooms")
+    private Integer nbRooms;
 
     @Column(name = "ref_photo")
-    private UUID refPhoto;
+    private UUID photo;
 
-    @Column(name = "birth_date")
-    private Date birthDate;
-
-    @Column(name = "bank_details")
-    private String bankDetails;
-
-    @Column(name = "social_security_number")
-    private String socialSecurityNumber;
+    @Column(name = "ref_photo_folder")
+    private UUID photoFolder;
 
     @JoinColumn(name = "fk_third_party_type")
     @ManyToOne

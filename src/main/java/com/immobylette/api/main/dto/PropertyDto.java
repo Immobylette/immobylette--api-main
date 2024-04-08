@@ -33,4 +33,9 @@ public class PropertyDto {
     private ThirdPartyDto currentTenant;
 
     private AddressDto address;
+
+    @JsonProperty("current_inventory")
+    private UUID currentInventory;
+
+    private String photo;
 }

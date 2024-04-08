@@ -35,7 +35,7 @@ public class Step {
 
     @JoinColumn(name = "fk_inventory")
     @ManyToOne
-    private InventoryType inventoryType;
+    private Inventory inventory;
 
     @JoinColumn(name = "fk_element")
     @ManyToOne

@@ -39,13 +39,13 @@ public class Room {
 
     @JoinColumn(name = "fk_allocation")
     @ManyToOne
-    private Allocation fkAllocation;
+    private Allocation allocation;
 
     @JoinColumn(name = "fk_room_type")
     @ManyToOne
-    private RoomType fkRoomType;
+    private RoomType roomType;
 
     @JoinColumn(name = "fk_property")
     @ManyToOne
-    private Property fkProperty;
+    private Property property;
 }

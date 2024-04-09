@@ -27,9 +27,11 @@ public class ElementDto {
 
     private Map<String, String> attributes;
 
+    @NotNull
     @JsonProperty("base_photos")
     private List<String> basePhotos;
 
+    @NotNull
     @JsonProperty("previous_photos")
     private List<String> previousPhotos;
 

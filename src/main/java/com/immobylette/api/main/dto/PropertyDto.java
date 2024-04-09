@@ -31,6 +31,10 @@ public class PropertyDto {
     private String heatingType;
 
     @NotNull
+    @JsonProperty("property_type")
+    private String propertyType;
+
+    @NotNull
     @JsonProperty("property_class")
     private String propertyClass;
 

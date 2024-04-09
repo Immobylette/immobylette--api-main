@@ -9,14 +9,14 @@ import jakarta.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name = "property_types")
+@Table(name = "state_types")
 public class StateType {
 
     @Id
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "label")
+    @Column(name = "label", nullable = false)
     private String label;
 
 }

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.UUID;
 
 @Entity
-@Table(name = "leases")
+@Table(name = "steps")
 @Getter
 @Builder
 @NoArgsConstructor
@@ -20,24 +20,24 @@ public class Step {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "error_description")
+    @Column(name = "error_description", nullable = false)
     private String errorDescription;
 
-    @Column(name = "ref_photos_folder")
+    @Column(name = "ref_photos_folder", nullable = false)
     private UUID refPhotosFolder;
 
-    @JoinColumn(name = "fk_state_type")
+    @JoinColumn(name = "fk_state_type", nullable = false)
     @ManyToOne
     private StateType stateType;
 
-    @JoinColumn(name = "fk_inventory")
+    @JoinColumn(name = "fk_inventory", nullable = false)
     @ManyToOne
     private Inventory inventory;
 
-    @JoinColumn(name = "fk_element")
+    @JoinColumn(name = "fk_element", nullable = false)
     @ManyToOne
     private Element element;
 }

@@ -1,6 +1,7 @@
 package com.immobylette.api.main.dto;
 
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,8 +11,12 @@ import java.util.UUID;
 @Getter
 public class ThirdPartyDto {
 
+    @NotNull
     private UUID id;
-    private String surname;
-    private String name;
 
+    @NotNull
+    private String surname;
+
+    @NotNull
+    private String name;
 }

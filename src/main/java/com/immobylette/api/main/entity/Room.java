@@ -1,11 +1,8 @@
 package com.immobylette.api.main.entity;
 
 
-import io.hypersistence.utils.hibernate.type.basic.PostgreSQLHStoreType;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Type;
 
-import java.util.Map;
 import java.util.UUID;
 
 @Entity
@@ -16,36 +13,36 @@ public class Room {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "area")
+    @Column(name = "area", nullable = false)
     private Float area;
 
-    @Column(name = "nb_walls")
+    @Column(name = "nb_walls", nullable = false)
     private Integer nbWalls;
 
-    @Column(name = "nb_doors")
+    @Column(name = "nb_doors", nullable = false)
     private Integer nbDoors;
 
-    @Column(name = "nb_windows")
+    @Column(name = "nb_windows", nullable = false)
     private Integer nbWindows;
 
     @Column(name = "reference")
     private String reference;
 
-    @Column(name = "number_order")
+    @Column(name = "number_order", nullable = false)
     private Integer numberOrder;
 
-    @JoinColumn(name = "fk_allocation")
+    @JoinColumn(name = "fk_allocation", nullable = false)
     @ManyToOne
     private Allocation allocation;
 
-    @JoinColumn(name = "fk_room_type")
+    @JoinColumn(name = "fk_room_type", nullable = false)
     @ManyToOne
     private RoomType roomType;
 
-    @JoinColumn(name = "fk_property")
+    @JoinColumn(name = "fk_property", nullable = false)
     @ManyToOne
     private Property property;
 }

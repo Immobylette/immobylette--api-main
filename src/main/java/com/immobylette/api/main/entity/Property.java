@@ -21,46 +21,42 @@ public class Property {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "creation_date")
+    @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
-    @Column(name = "surface")
+    @Column(name = "surface", nullable = false)
     private float surface;
 
-    @Column(name = "nb_rooms")
+    @Column(name = "nb_rooms", nullable = false)
     private Integer nbRooms;
 
-    @Column(name = "ref_photo")
+    @Column(name = "ref_photo", nullable = false)
     private UUID photo;
 
-    @Column(name = "ref_photo_folder")
+    @Column(name = "ref_photos_folder")
     private UUID photoFolder;
 
-    @JoinColumn(name = "fk_third_party_type")
-    @ManyToOne
-    private ThirdPartyType thirdPartyType;
-
-    @JoinColumn(name = "fk_address")
+    @JoinColumn(name = "fk_address", nullable = false)
     @ManyToOne
     private Address address;
 
-    @JoinColumn(name = "fk__third_party_owner")
+    @JoinColumn(name = "fk_third_party_owner", nullable = false)
     @ManyToOne
     private ThirdParty owner;
 
-    @JoinColumn(name = "fk_hot_water_type")
+    @JoinColumn(name = "fk_hot_water_type", nullable = false)
     @ManyToOne
     private HotWaterType hotWaterType;
 
-    @JoinColumn(name = "fk_heating_type")
+    @JoinColumn(name = "fk_heating_type", nullable = false)
     @ManyToOne
     private HeatingType heatingType;
 
-    @JoinColumn(name = "fk_property_type")
+    @JoinColumn(name = "fk_property_type", nullable = false)
     @ManyToOne
     private PropertyType propertyType;
 
-    @JoinColumn(name = "fk_property_class")
+    @JoinColumn(name = "fk_property_class", nullable = false)
     @ManyToOne
     private PropertyClass propertyClass;
 

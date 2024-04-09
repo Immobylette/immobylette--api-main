@@ -22,27 +22,27 @@ public class Lease {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "creation_date")
+    @Column(name = "creation_date", nullable = false)
     private Date creationDate;
 
-    @Column(name = "rental_start_date")
+    @Column(name = "rental_start_date", nullable = false)
     private Date rentalStartDate;
 
-    @Column(name = "nb_keys")
+    @Column(name = "nb_keys", nullable = false, columnDefinition = "integer default 1")
     private Integer nbKeys;
 
-    @Column(name = "end_date")
+    @Column(name = "end_date", nullable = false)
     private Date endDate;
 
-    @JoinColumn(name = "fk_owner")
+    @JoinColumn(name = "fk_owner", nullable = false)
     @ManyToOne
     private ThirdParty owner;
 
-    @JoinColumn(name = "fk_tenant")
+    @JoinColumn(name = "fk_tenant", nullable = false)
     @ManyToOne
     private ThirdParty tenant;
 
-    @JoinColumn(name = "fk_property")
+    @JoinColumn(name = "fk_property", nullable = false)
     @ManyToOne
     private Property property;
 

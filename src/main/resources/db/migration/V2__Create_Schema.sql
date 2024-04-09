@@ -26,7 +26,7 @@ CREATE TABLE "properties" (
                               "surface" float NOT NULL,
                               "nb_rooms" int NOT NULL,
                               "ref_photo" uuid NOT NULL,
-                              "ref_photo_folder" uuid,
+                              "ref_photos_folder" uuid,
                               "fk_hot_water_type" uuid NOT NULL,
                               "fk_heating_type" uuid NOT NULL,
                               "fk_property_type" uuid NOT NULL,

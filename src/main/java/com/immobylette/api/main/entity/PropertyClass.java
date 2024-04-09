@@ -16,7 +16,7 @@ public class PropertyClass {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "label")
+    @Column(name = "label", nullable = false)
     private String label;
 
 }

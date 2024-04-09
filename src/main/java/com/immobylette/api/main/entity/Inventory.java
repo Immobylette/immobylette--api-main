@@ -25,15 +25,15 @@ public class Inventory {
     @Column(name = "inventory_date")
     private Date inventoryDate;
 
-    @JoinColumn(name = "fk_inventory_type")
+    @JoinColumn(name = "fk_inventory_type", nullable = false)
     @ManyToOne
     private InventoryType inventoryType;
 
-    @JoinColumn(name = "fk_lease")
+    @JoinColumn(name = "fk_lease", nullable = false)
     @ManyToOne
     private Lease lease;
 
-    @JoinColumn(name = "fk_third_party")
+    @JoinColumn(name = "fk_third_party", nullable = false)
     @ManyToOne
     private ThirdParty agent;
 

@@ -21,25 +21,25 @@ public class ThirdParty {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "surname")
+    @Column(name = "surname", nullable = false)
     private String surname;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "ref_photo")
     private UUID refPhoto;
 
-    @Column(name = "birth_date")
+    @Column(name = "birth_date", nullable = false)
     private Date birthDate;
 
-    @Column(name = "bank_details")
+    @Column(name = "bank_details", nullable = false)
     private String bankDetails;
 
-    @Column(name = "social_security_number")
+    @Column(name = "social_security_number", nullable = false)
     private String socialSecurityNumber;
 
-    @JoinColumn(name = "fk_third_party_type")
+    @JoinColumn(name = "fk_third_party_type", nullable = false)
     @ManyToOne
     private ThirdPartyType thirdPartyType;
 }

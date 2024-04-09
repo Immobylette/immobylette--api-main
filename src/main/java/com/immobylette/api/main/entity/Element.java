@@ -20,21 +20,24 @@ public class Element {
     @Column(columnDefinition = "hstore", name = "attributes")
     private Map<String, String> attributes = Map.of();
 
-    @Column(name = "ref_photo")
+    @Column(name = "ref_photo", nullable = false)
     private UUID photo;
 
-    @Column(name = "ref_photo_folder")
+    @Column(name = "ref_photos_folder", nullable = false)
     private UUID photoFolder;
 
-    @JoinColumn(name = "fk_element_parent")
+    @Column(name = "description")
+    private String description;
+
+    @JoinColumn(name = "fk_parent_element")
     @ManyToOne
     private Element parent;
 
-    @JoinColumn(name = "fk_element_type")
+    @JoinColumn(name = "fk_element_type", nullable = false)
     @ManyToOne
     private ElementType elementType;
 
-    @JoinColumn(name = "fk_room")
+    @JoinColumn(name = "fk_room", nullable = false)
     @ManyToOne
     private Room room;
 

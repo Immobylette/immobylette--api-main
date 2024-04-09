@@ -2,6 +2,7 @@ package com.immobylette.api.main.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,13 +14,16 @@ import java.util.UUID;
 @Getter
 public class ElementDto {
 
+    @NotNull
     private UUID id;
 
     private String description;
 
+    @NotNull
     private String type;
 
-    private UUID photo;
+    @NotNull
+    private String photo;
 
     private Map<String, String> attributes;
 
@@ -29,5 +33,6 @@ public class ElementDto {
     @JsonProperty("previous_photos")
     private List<String> previousPhotos;
 
+    @NotNull
     private StepDto step;
 }

@@ -15,7 +15,7 @@ public class ThirdPartyType {
     @Id
     private UUID id;
 
-    @Column(name = "label")
+    @Column(name = "label", nullable = false)
     private String label;
 
 }

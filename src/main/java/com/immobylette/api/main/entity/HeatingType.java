@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name = "hot_water_types")
+@Table(name = "heating_types")
 public class HeatingType {
 
     @Id

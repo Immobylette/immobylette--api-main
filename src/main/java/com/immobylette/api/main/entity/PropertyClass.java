@@ -9,7 +9,7 @@ import jakarta.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name = "property_types")
+@Table(name = "property_classes")
 public class PropertyClass {
 
     @Id

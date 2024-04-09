@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 @Entity
-@Table(name = "signatures_inventories_third_parties")
+@Table(name = "signatures_leases_third_parties")
 @Getter
 @Builder
 @NoArgsConstructor

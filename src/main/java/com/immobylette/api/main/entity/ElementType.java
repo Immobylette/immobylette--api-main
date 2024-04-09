@@ -24,5 +24,4 @@ public class ElementType {
             inverseJoinColumns = @JoinColumn(name = "id_element_type")
     )
     private List<ElementAttribute> attributes;
-
 }

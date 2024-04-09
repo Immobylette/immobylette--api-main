@@ -1,10 +1,7 @@
 package com.immobylette.api.main.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,8 +17,15 @@ import java.util.Date;
 @AllArgsConstructor
 public class SignatureLeaseThirdParty {
 
-    @EmbeddedId
-    private SignatureLeaseThirdPartyId id;
+    @Id
+    @JoinColumn(name = "id_lease")
+    @ManyToOne
+    private Lease lease;
+
+    @Id
+    @JoinColumn(name = "id_third_party")
+    @ManyToOne
+    private ThirdParty thirdParty;
 
 
     @Column(name = "signature_date")

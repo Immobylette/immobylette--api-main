@@ -19,11 +19,16 @@ import java.util.UUID;
 @AllArgsConstructor
 public class SignatureInventoryThirdParty {
 
-    @EmbeddedId
-    private SignatureInventoryThirdPartyId id;
+    @Id
+    @JoinColumn(name = "id_inventory")
+    @ManyToOne
+    private Inventory inventory;
 
+    @Id
+    @JoinColumn(name = "id_third_party")
+    @ManyToOne
+    private ThirdParty thirdParty;
 
     @Column(name = "signature_date")
     private Date signatureDate;
-
 }

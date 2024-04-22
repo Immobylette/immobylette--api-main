@@ -1,6 +1,7 @@
 package com.immobylette.api.main.controller;
 
 import com.immobylette.api.main.dto.PropertyDto;
+import com.immobylette.api.main.dto.PropertySummaryDto;
 import com.immobylette.api.main.exception.PropertyNotFoundException;
 import com.immobylette.api.main.service.PropertyService;
 import lombok.AllArgsConstructor;
@@ -19,7 +20,7 @@ public class PropertyController {
     private final PropertyService propertyService;
 
     @GetMapping("/properties")
-    public Page<PropertyDto> getProperties(
+    public Page<PropertySummaryDto> getProperties(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(name = "per_page", defaultValue = "10") int perPage,
             @RequestParam double latitude,

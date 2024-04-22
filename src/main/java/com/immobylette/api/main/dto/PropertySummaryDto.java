@@ -27,8 +27,8 @@ public class PropertySummaryDto {
     private AddressDto address;
 
     @NotNull
-    @JsonProperty("curent_inventory")
-    private Boolean curentInventory;
+    @JsonProperty("current_inventory")
+    private Boolean currentInventory;
 
     @NotNull
     private float distance;

@@ -22,6 +22,11 @@ jobs:
           distribution: 'adopt'
           java-version-file: '.java-version'
 
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+
       - name: Build with Maven
         run: mvn clean install -DskipTests
 
@@ -39,8 +44,10 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Format image name
+        id: branch-names
+        uses: tj-actions/branch-names@v8
         run: |
-          TAG_NAME=$(echo "${{GITHUB_HEAD_REF}}" | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
+          TAG_NAME=$(echo "${{ steps.branch-names.outputs.current_branch }}" | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
           echo "::set-output name=TAG_NAME::TAG_NAME"
 
       - name: Configure Docker

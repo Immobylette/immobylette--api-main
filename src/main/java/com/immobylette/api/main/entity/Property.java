@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -59,6 +60,9 @@ public class Property {
     @JoinColumn(name = "fk_property_class", nullable = false)
     @ManyToOne
     private PropertyClass propertyClass;
+
+    @OneToMany(mappedBy = "property")
+    private List<Lease> leases;
 
 
 }

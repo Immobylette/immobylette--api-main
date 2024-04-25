@@ -31,7 +31,7 @@ jobs:
     if: github.event_name == 'pull_request' || !(github.ref == 'refs/heads/main')
 
     steps:
-      - uses: google-github-actions/setup-gcloud@master
+      - uses: google-github-actions/setup-gcloud@main
         with:
           export_default_credentials: true
           service_account_key: ${{ secrets.GCP_SA_KEY }}

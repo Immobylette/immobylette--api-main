@@ -20,7 +20,6 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: 'adopt'
-          java-version: 'auto'
 
       - name: Build with Maven
         run: mvn clean install -DskipTests
@@ -40,6 +39,7 @@ jobs:
       - name: Format image name
         run: |
           TAG_NAME=$(echo "${{ github.ref_name }}" | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
+          echo $TAG_NAME
           echo "::set-output name=TAG_NAME::TAG_NAME"
 
       - name: Configure Docker

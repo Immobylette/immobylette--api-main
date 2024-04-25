@@ -19,7 +19,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'OpenJDK'
+          distribution: 'adopt'
           java-version-file: '.java-version'
 
       - name: Build with Maven

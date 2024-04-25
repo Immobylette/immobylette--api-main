@@ -1,0 +1,66 @@
+name: CI/CD Immobylette Api Main
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  setup:
+    name: Setup
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: 'auto'
+
+      - name: Build with Maven
+        run: mvn clean install -DskipTests
+
+  build:
+    name: Build Snapshot and Push
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || !(github.ref == 'refs/heads/main')
+
+    steps:
+      - uses: google-github-actions/setup-gcloud@master
+        with:
+          export_default_credentials: true
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Format image name
+        run: |
+          TAG_NAME=$(echo "${{ github.ref_name }}" | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
+          echo "::set-output name=TAG_NAME::TAG_NAME"
+
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker europe-west9-docker.pkg.dev
+
+      - name: Build and Push Snapshot
+        run: |
+          docker build -t europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/immobylette--api-main/immobylette--api-main:${{ steps.build.outputs.TAG_NAME }} .
+          docker push europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/immobylette--api-main/immobylette--api-main:${{ steps.build.outputs.TAG_NAME }}
+  
+
+  release:
+    name: Build Release and Push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Tag and Publish Release
+        run: |
+          # Your commands to build and publish the release container

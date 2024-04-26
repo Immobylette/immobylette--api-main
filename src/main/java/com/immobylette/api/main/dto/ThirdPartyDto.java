@@ -19,4 +19,7 @@ public class ThirdPartyDto {
 
     @NotNull
     private String name;
+
+    @NotNull
+    private String photo;
 }

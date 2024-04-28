@@ -55,10 +55,12 @@ jobs:
           gcloud auth configure-docker europe-west9-docker.pkg.dev
 
       - name: Build and Push Snapshot
+        env:
+          BRANCH_FORMATTED: ${{ steps.format-image-name.outputs.BRANCH_FORMATTED }}
         run: |
-          echo "Building image for branch ${{ steps.branch-names.outputs.current_branch }}"
-          docker build -t europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/immobylette--api-main/immobylette--api-main:${{ steps.build.outputs.BRANCH_FORMATTED }} .
-          docker push europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/immobylette--api-main/immobylette--api-main:${{ steps.format-image-name.outputs.BRANCH_FORMATTED }}
+          echo "Building image for branch ${{BRANCH_FORMATTED}}"
+          docker build -t europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/immobylette--api-main/immobylette--api-main:$BRANCH_FORMATTED .
+          docker push europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/immobylette--api-main/immobylette--api-main:$BRANCH_FORMATTED
   
 
   release:

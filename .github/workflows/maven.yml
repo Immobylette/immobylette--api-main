@@ -14,12 +14,6 @@ jobs:
     if: github.event_name == 'pull_request' || !(github.ref == 'refs/heads/main')
 
     steps:
-      - uses: google-github-actions/setup-gcloud@main
-        with:
-          export_default_credentials: true
-          service_account_key: ${{ secrets.GCP_SA_KEY }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -48,6 +42,19 @@ jobs:
         run: |
           gcloud auth configure-docker europe-west9-docker.pkg.dev
 
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          token_format: access_token
+          service_account: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Login to GAR
+        uses: docker/login-action@v3
+        with:
+          registry: europe-west9-docker.pkg.dev
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
 
       - name: Build and Push Snapshot
         env:

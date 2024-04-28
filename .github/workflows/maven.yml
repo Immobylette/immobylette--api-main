@@ -21,11 +21,6 @@ jobs:
         with:
           distribution: 'adopt'
           java-version-file: '.java-version'
-
-      - name: Extract branch name
-        shell: bash
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-        id: extract_branch
         
       - name: Build with Maven
         run: mvn clean install -DskipTests
@@ -43,9 +38,13 @@ jobs:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
+      - name: Get branch names.
+        id: branch-names
+        uses: tj-actions/branch-names@v8
+
       - name: Format image name
         run: |
-          echo "Running on pr: ${{ steps.extract_branch.outputs.branch }}"
+          echo "Running on pr: ${{ steps.branch-names.outputs.current_branch }}"
           TAG_NAME=$(echo "${{ steps.branch-names.outputs.current_branch }}" | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
           echo "::set-output name=TAG_NAME::TAG_NAME"
 

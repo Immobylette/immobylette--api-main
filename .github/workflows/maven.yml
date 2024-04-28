@@ -58,7 +58,7 @@ jobs:
         env:
           TAG_NAME: ${{ steps.format-image-name.outputs.TAG_NAME }}
         run: |
-          echo "Building image for branch ${{BRANCH_FORMATTED}}"
+          echo "Building image for branch $TAG_NAME"
           docker build -t europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/immobylette--api-main/immobylette--api-main:TAG_NAME .
           docker push europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/immobylette--api-main/immobylette--api-main:TAG_NAME
   

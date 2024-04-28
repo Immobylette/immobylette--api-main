@@ -10,7 +10,6 @@ on:
 jobs:
   build:
     name: Build Snapshot and Push
-    needs: setup
     runs-on: ubuntu-latest
     if: github.event_name == 'pull_request' || !(github.ref == 'refs/heads/main')
 

@@ -48,7 +48,7 @@ jobs:
           echo "Running on pr: ${{ steps.branch-names.outputs.current_branch }}"
           BRANCH_FORMATTED=$(echo "${{ steps.branch-names.outputs.current_branch }}" | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
           echo "Branch : ${BRANCH_FORMATTED}" 
-          echo "TAG_NAME=BRANCH_FORMATTED" >> "$GITHUB_OUTPUT"
+          echo "TAG_NAME=$BRANCH_FORMATTED" >> "$GITHUB_OUTPUT"
 
       - name: Configure Docker
         run: |

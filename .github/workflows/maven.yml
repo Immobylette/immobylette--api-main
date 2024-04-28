@@ -48,7 +48,7 @@ jobs:
           echo "Running on pr: ${{ steps.branch-names.outputs.current_branch }}"
           BRANCH_FORMATTED=$(echo "${{ steps.branch-names.outputs.current_branch }}" | sed 's/[^a-zA-Z0-9]/-/g' | tr '[:upper:]' '[:lower:]')
           echo "Branch : ${BRANCH_FORMATTED}" 
-          echo "{TAG_NAME}={BRANCH_FORMATTED}" >> $GITHUB_OUTPUT
+          echo "TAG_NAME=BRANCH_FORMATTED" >> "$GITHUB_OUTPUT"
 
       - name: Configure Docker
         run: |
@@ -56,11 +56,11 @@ jobs:
 
       - name: Build and Push Snapshot
         env:
-          BRANCH_FORMATTED: ${{ steps.format-image-name.outputs.BRANCH_FORMATTED }}
+          TAG_NAME: ${{ steps.format-image-name.outputs.TAG_NAME }}
         run: |
           echo "Building image for branch ${{BRANCH_FORMATTED}}"
-          docker build -t europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/immobylette--api-main/immobylette--api-main:$BRANCH_FORMATTED .
-          docker push europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/immobylette--api-main/immobylette--api-main:$BRANCH_FORMATTED
+          docker build -t europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/immobylette--api-main/immobylette--api-main:TAG_NAME .
+          docker push europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/immobylette--api-main/immobylette--api-main:TAG_NAME
   
 
   release:

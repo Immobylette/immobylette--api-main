@@ -54,6 +54,9 @@ jobs:
         run: |
           gcloud auth configure-docker europe-west9-docker.pkg.dev
 
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Build and Push Snapshot
         env:
           TAG_NAME: ${{ steps.format-image-name.outputs.TAG_NAME }}

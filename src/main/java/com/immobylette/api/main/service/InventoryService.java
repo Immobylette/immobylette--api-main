@@ -33,10 +33,10 @@ public class InventoryService {
 
     private final RoomMapper roomMapper;
 
-    public UUID createInventory(UUID propertyId, UUID agentId) {
+    public UUID createInventory(UUID propertyId, UUID agentId)  throws PropertyNotAssociatedWithAnyLeaseException, AgentNotFoundException {
         Inventory inventory = new Inventory();
 
-        inventory.setLease(leaseRepository.getLastLeaseByPropertyId(propertyId).orElseThrow(() -> new PropertyNotAssociatedWithAnyLeaseException(propertyId)));
+        inventory.setLease(leaseRepository.findFirstByPropertyIdOrderByRentalStartDateDesc(propertyId).orElseThrow(() -> new PropertyNotAssociatedWithAnyLeaseException(propertyId)));
         inventory.setAgent(thirdPartyRepository.findById(agentId).orElseThrow(() -> new AgentNotFoundException(agentId)));
         inventory.setInventoryDate(new Date());
 

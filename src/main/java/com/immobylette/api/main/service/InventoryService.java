@@ -8,6 +8,7 @@ import com.immobylette.api.main.mapper.RoomMapper;
 import com.immobylette.api.main.repository.PropertyRepository;
 import com.immobylette.api.main.repository.RoomRepository;
 import com.immobylette.api.main.entity.Inventory;
+import com.immobylette.api.main.entity.enums.InventoryTypeLabel;
 import com.immobylette.api.main.exception.AgentNotFoundException;
 import com.immobylette.api.main.exception.PropertyNotAssociatedWithAnyLeaseException;
 import com.immobylette.api.main.repository.InventoryRepository;
@@ -40,7 +41,7 @@ public class InventoryService {
         inventory.setAgent(thirdPartyRepository.findById(agentId).orElseThrow(() -> new AgentNotFoundException(agentId)));
         inventory.setInventoryDate(new Date());
 
-        String inventoryTypeLabel = inventoryRepository.findLastInventoryType(propertyId).equals("ENTREE")?"SORTIE":"ENTREE";
+        InventoryTypeLabel inventoryTypeLabel = inventoryRepository.findLastInventoryType(propertyId).equals(InventoryTypeLabel.ENTREE.getLabel())?InventoryTypeLabel.SORTIE:InventoryTypeLabel.ENTREE;
         inventory.setInventoryType(inventoryTypeRepository.findByLabel(inventoryTypeLabel));
 
         inventoryRepository.save(inventory);

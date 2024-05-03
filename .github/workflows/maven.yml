@@ -38,8 +38,6 @@ jobs:
           echo "Branch : ${BRANCH_FORMATTED}" 
           echo "TAG_NAME=$BRANCH_FORMATTED" >> "$GITHUB_OUTPUT"
 
-
-
       - name: Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/setup-gcloud@v0
@@ -51,13 +49,6 @@ jobs:
       - name: Configure Docker
         run: |
           gcloud auth configure-docker europe-west9-docker.pkg.dev
-
-#      - name: Login to GAR
-#        uses: docker/login-action@v3
-#        with:
-#          registry: europe-west9-docker.pkg.dev
-#          username: oauth2accesstoken
-#          password: ${{ steps.auth.outputs.access_token }}
 
       - name: Build and Push Snapshot
         env:
@@ -74,9 +65,83 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v1
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Tag and Publish Release
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version-file: '.java-version'
+
+      - name: Build with Maven
+        run: mvn clean install -DskipTests
+
+      - name: Get branch names.
+        id: branch-names
+        uses: tj-actions/branch-names@v8
+
+      - name: Get prefix
+        id: get_prefix
         run: |
-          # Your commands to build and publish the release container
+          prefix=$(echo "${{ steps.branch-names.outputs.current_branch }}" | cut -d'/' -f 1)")
+          echo "Prefix: $prefix"
+          echo "prefix=$prefix" >> "$GITHUB_OUTPUT"
+
+      - name: Get latest tag
+        id: get_tag
+        run: |
+            git fetch --tags
+            latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+            echo "Latest tag: $latest_tag"
+            echo "tag=$latest_tag" >> "$GITHUB_OUTPUT"
+
+      - name: Determine version bump
+        id: bump_version
+        env:
+            prefix: ${{ steps.get_prefix.outputs.prefix }}
+            tag: ${{ steps.get_tag.outputs.tag }}
+        run: |
+            case $prefix in
+              core)
+                new_version=$(echo $tag | awk -F'.' '{print $1+1"."$2"."$3}')
+                ;;
+              feat)
+                new_version=$(echo $tag | awk -F'.' '{print $1"."$2+1".0"}')
+                ;;
+              fix)
+                new_version=$(echo $tag | awk -F'.' '{print $1"."$2"."$3+1}')
+                ;;
+              *)
+                echo "Invalid prefix: $prefix"
+                exit 1
+                ;;
+            esac
+            echo "New version: $new_version"
+            echo "TAG_NAME=$new_version" >> "$GITHUB_OUTPUT"
+
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          export_default_credentials: true
+          service_account_key: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker europe-west9-docker.pkg.dev
+
+      - name: Build and Push Snapshot
+        env:
+          TAG_NAME: ${{ steps.format-image-name.outputs.TAG_NAME }}
+        run: |
+          echo "Building image for branch $TAG_NAME"
+          docker build -t europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/immobylette--api-main/immobylette--api-main:$TAG_NAME .
+          docker push europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/immobylette--api-main/immobylette--api-main:$TAG_NAME
+
+      - name: Set new tag
+        run: |
+            git tag ${{ steps.bump_version.outputs.TAG_NAME }}
+            git push origin v${{ steps.bump_version.outputs.TAG_NAME }}
+          

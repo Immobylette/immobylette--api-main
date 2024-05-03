@@ -16,4 +16,13 @@ public interface PropertyRepository extends JpaRepository<Property, UUID> {
             "JOIN p.address a " +
             "ORDER BY calculate_distance(a.latitude, a.longitude, :latitude, :longitude) ASC")
     Page<PropertyDistance> findAllOrderByDistance(double latitude, double longitude, Pageable pageable);
+
+    @Query(
+        "SELECT p " +
+        "FROM Lease l " +
+        "JOIN l.property p " +
+        "JOIN l.inventories i " +
+        "WHERE i.id = :id"
+    )
+    Property findByInventoryId(UUID id);
 }

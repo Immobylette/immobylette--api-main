@@ -48,4 +48,7 @@ public class Lease {
 
     @OneToMany(mappedBy = "lease")
     private List<SignatureLeaseThirdParty> signatures;
+
+    @OneToMany(mappedBy = "lease")
+    private List<Inventory> inventories;
 }

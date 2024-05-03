@@ -23,6 +23,6 @@ public class RoomType {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "surname", nullable = false)
+    @Column(name = "label", nullable = false)
     private String label;
 }

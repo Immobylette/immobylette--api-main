@@ -23,10 +23,8 @@ public class InventoryService {
 
     public RoomDto getCurrentRoom(UUID id) throws InventoryNotFoundException {
         Property property = propertyRepository.findByInventoryId(id);
-        Room room = roomRepository.findCurrentRoomByInventoryIdAndRoomId(id, property.getId());
-        if (room == null) {
-            throw new InventoryNotFoundException(id);
-        }
+        Room room = roomRepository.findCurrentRoomByInventoryIdAndRoomId(id, property.getId()).orElseThrow(() -> new InventoryNotFoundException(id));
+
         return roomMapper.fromRoom(room);
     }
 }

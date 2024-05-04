@@ -4,6 +4,7 @@ import com.immobylette.api.main.entity.Room;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface RoomRepository extends JpaRepository<Room, UUID> {
@@ -16,5 +17,5 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
         "ORDER BY r.numberOrder " +
         "LIMIT 1"
     )
-    Room findCurrentRoomByInventoryIdAndRoomId(UUID inventoryId, UUID propertyId);
+    Optional<Room> findCurrentRoomByInventoryIdAndRoomId(UUID inventoryId, UUID propertyId);
 }

@@ -8,6 +8,7 @@ import com.immobylette.api.main.mapper.RoomMapper;
 import com.immobylette.api.main.repository.PropertyRepository;
 import com.immobylette.api.main.repository.RoomRepository;
 import com.immobylette.api.main.entity.Inventory;
+import com.immobylette.api.main.entity.Lease;
 import com.immobylette.api.main.entity.enums.InventoryTypeLabel;
 import com.immobylette.api.main.exception.AgentNotFoundException;
 import com.immobylette.api.main.exception.PropertyNotAssociatedWithAnyLeaseException;
@@ -37,7 +38,9 @@ public class InventoryService {
     public UUID createInventory(UUID propertyId, UUID agentId)  throws PropertyNotAssociatedWithAnyLeaseException, AgentNotFoundException {
         Inventory inventory = new Inventory();
 
-        inventory.setLease(leaseRepository.findFirstByPropertyIdOrderByRentalStartDateDesc(propertyId).orElseThrow(() -> new PropertyNotAssociatedWithAnyLeaseException(propertyId)));
+        Lease currentLease = leaseRepository.findFirstByPropertyIdOrderByRentalStartDateDesc(propertyId).orElseThrow(() -> new PropertyNotAssociatedWithAnyLeaseException(propertyId));
+
+        inventory.setLease(currentLease);
         inventory.setAgent(thirdPartyRepository.findById(agentId).orElseThrow(() -> new AgentNotFoundException(agentId)));
         inventory.setInventoryDate(new Date());
 

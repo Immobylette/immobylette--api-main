@@ -5,6 +5,7 @@ import io.hypersistence.utils.hibernate.type.basic.PostgreSQLHStoreType;
 import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -40,5 +41,8 @@ public class Element {
     @JoinColumn(name = "fk_room", nullable = false)
     @ManyToOne
     private Room room;
+
+    @OneToMany(mappedBy = "element")
+    private List<Step> steps;
 
 }

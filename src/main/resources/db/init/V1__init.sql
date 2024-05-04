@@ -25,3 +25,38 @@ BEGIN
     RETURN distance;
 END;
 $$ LANGUAGE plpgsql;
+
+-- Function to calculate the number of steps in a room for a given inventory
+CREATE OR REPLACE FUNCTION calculate_nb_steps(
+    room_id  uuid,
+    inventory_id  uuid
+)
+    RETURNS INT AS $$
+DECLARE
+    nb INT;
+BEGIN
+    SELECT COUNT(s.id) INTO nb
+    FROM rooms r
+             LEFT JOIN elements e ON e.fk_room = r.id
+             LEFT JOIN steps s ON s.fk_element = e.id
+    WHERE r.id = room_id
+      AND s.fk_inventory = inventory_id;
+    RETURN nb;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Function to calculate the number of elements in a room
+CREATE OR REPLACE FUNCTION calculate_nb_elements(
+    room_id  uuid
+)
+    RETURNS INT AS $$
+DECLARE
+    nb INT;
+BEGIN
+    SELECT COUNT(e.id) INTO nb
+    FROM rooms r
+             LEFT JOIN elements e ON e.fk_room = r.id
+    WHERE r.id = room_id;
+    RETURN nb;
+END;
+$$ LANGUAGE plpgsql

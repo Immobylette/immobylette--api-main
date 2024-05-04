@@ -2,11 +2,20 @@ package com.immobylette.api.main.entity;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "rooms")
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Room {
 
     @Id
@@ -45,4 +54,7 @@ public class Room {
     @JoinColumn(name = "fk_property", nullable = false)
     @ManyToOne
     private Property property;
+
+    @OneToMany(mappedBy = "room")
+    private List<Element> elements;
 }

@@ -17,4 +17,13 @@ public interface InventoryRepository extends JpaRepository<Inventory, UUID> {
        "HAVING count(sitp.inventory.id) = 0"
     )
     UUID findCurrentInventoryByPropertyId(UUID propertyId);
+
+    @Query(
+            "SELECT i.inventoryType.label " +
+            "FROM Inventory i " +
+            "JOIN Lease l ON l.id = i.lease.id AND l.property.id = :propertyId " +
+            "ORDER BY i.inventoryDate DESC " +
+            "LIMIT 1"
+    )
+    String findLastInventoryType(UUID propertyId);
 }

@@ -2,12 +2,14 @@ package com.immobylette.api.main.entity;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "element_types")
+@Getter
 public class ElementType {
 
     @Id

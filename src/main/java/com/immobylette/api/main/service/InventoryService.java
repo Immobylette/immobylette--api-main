@@ -1,13 +1,17 @@
 package com.immobylette.api.main.service;
 
 import com.immobylette.api.main.dto.RoomDto;
+import com.immobylette.api.main.dto.ElementSummaryDto;
+import com.immobylette.api.main.entity.Element;
+import com.immobylette.api.main.entity.Inventory;
 import com.immobylette.api.main.entity.Property;
 import com.immobylette.api.main.entity.Room;
 import com.immobylette.api.main.exception.InventoryNotFoundException;
+import com.immobylette.api.main.mapper.ElementSummaryMapper;
 import com.immobylette.api.main.mapper.RoomMapper;
 import com.immobylette.api.main.repository.PropertyRepository;
+import com.immobylette.api.main.repository.ElementRepository;
 import com.immobylette.api.main.repository.RoomRepository;
-import com.immobylette.api.main.entity.Inventory;
 import com.immobylette.api.main.entity.Lease;
 import com.immobylette.api.main.entity.enums.InventoryTypeLabel;
 import com.immobylette.api.main.exception.AgentNotFoundException;
@@ -21,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -31,7 +36,12 @@ public class InventoryService {
     private final ThirdPartyRepository thirdPartyRepository;
     private final LeaseRepository leaseRepository;
     private final RoomRepository roomRepository;
+
     private final PropertyRepository propertyRepository;
+
+    private final ElementRepository elementRepository;
+
+    private final ElementSummaryMapper elementSummaryMapper;
 
     private final RoomMapper roomMapper;
 
@@ -52,10 +62,18 @@ public class InventoryService {
         return inventory.getId();
     }
 
+
     public RoomDto getCurrentRoom(UUID id) throws InventoryNotFoundException {
         Property property = propertyRepository.findByInventoryId(id);
         Room room = roomRepository.findCurrentRoomByInventoryIdAndRoomId(id, property.getId()).orElseThrow(() -> new InventoryNotFoundException(id));
 
         return roomMapper.fromRoom(room);
+    }
+
+    public List<ElementSummaryDto> getElements(UUID id) throws InventoryNotFoundException {
+        Property property = propertyRepository.findByInventoryId(id);
+        Room room = roomRepository.findCurrentRoomByInventoryIdAndRoomId(id, property.getId()).orElseThrow(() -> new InventoryNotFoundException(id));
+        List<Element> elements = elementRepository.findElementsByRoomId(room.getId());
+        return elements.stream().map(elementSummaryMapper::fromElement).toList();
     }
 }

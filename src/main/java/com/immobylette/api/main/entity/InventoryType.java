@@ -1,10 +1,13 @@
 package com.immobylette.api.main.entity;
 
 
+import com.immobylette.api.main.entity.enums.InventoryTypeLabel;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 
 import java.util.UUID;
 
@@ -17,6 +20,7 @@ public class InventoryType {
     private UUID id;
 
     @Column(name = "label", nullable = false)
-    private String label;
+    @Enumerated(EnumType.STRING)
+    private InventoryTypeLabel label;
 
 }

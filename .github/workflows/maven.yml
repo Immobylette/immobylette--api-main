@@ -81,10 +81,17 @@ jobs:
         id: branch-names
         uses: tj-actions/branch-names@v8
 
+      - name: Extract source branch name
+        id: source_branch
+        run: | 
+          branch=$(git rev-parse --abbrev-ref HEAD)
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
+
+
       - name: Get prefix
         id: get_prefix
         run: |
-          prefix=$(echo "${{ steps.branch-names.outputs.current_branch }}" | cut -d'/' -f 1)")
+          prefix=$(echo "${{ steps.source_branch.outputs.branch }}" | cut -d'/' -f 1)")
           echo "Prefix: $prefix"
           echo "prefix=$prefix" >> "$GITHUB_OUTPUT"
 

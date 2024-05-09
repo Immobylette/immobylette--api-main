@@ -26,4 +26,9 @@ public class InventoryController {
     public List<ElementSummaryDto> getElements(@PathVariable UUID id) throws InventoryNotFoundException {
         return inventoryService.getElements(id);
     }
+
+    @GetMapping("/inventories/{id}/walls")
+    public List<ElementSummaryDto> getWalls(@PathVariable UUID id) throws InventoryNotFoundException {
+        return inventoryService.getWalls(id);
+    }
 }

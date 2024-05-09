@@ -11,13 +11,7 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public interface ElementSummaryMapper {
 
-    @Mappings({
-            @Mapping(target = "id", source = "id"),
-            @Mapping(target = "description", source = "description"),
-            @Mapping(target = "type", source = "elementType", qualifiedByName = "ElementType"),
-            @Mapping(target = "photo", source = "photo"),
-            @Mapping(target = "attributes", source = "attributes"),
-    })
+    @Mapping(target = "type", source = "elementType", qualifiedByName = "ElementType")
     ElementSummaryDto fromElement(Element element);
 
     @Named("ElementType")

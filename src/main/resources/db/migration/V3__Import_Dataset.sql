@@ -1,19 +1,3 @@
---
--- PostgreSQL database dump
-
--- Dumped from database version 16.2
--- Dumped by pg_dump version 16.2
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
 -- addresses
 
 INSERT INTO addresses (id, number, street, zip, city, floor, extra, latitude, longitude) VALUES ('683e12be-6a56-42c0-9970-e2e8980d25e1', 12, 'Rue de la Liberté', 59000, 'Lille', NULL, NULL, 50.6326, 3.0586);
@@ -711,7 +695,6 @@ INSERT INTO signatures_leases_third_parties (id_lease, id_third_party, signature
 INSERT INTO signatures_leases_third_parties (id_lease, id_third_party, signature_date) VALUES ('e002751b-eabd-4ca9-826d-08d0a3d3fec5', '27b01635-465f-448e-8487-5779eef21c23', '2024-02-10');
 INSERT INTO signatures_leases_third_parties (id_lease, id_third_party, signature_date) VALUES ('c094d000-fd8d-4ad4-aef1-978ddf3eb450', 'ffa52277-e5f7-4b63-ba5d-00f7b23e0570', '2023-11-15');
 INSERT INTO signatures_leases_third_parties (id_lease, id_third_party, signature_date) VALUES ('95186a17-744f-4c97-8cf2-437297aec3ab', 'ffa52277-e5f7-4b63-ba5d-00f7b23e0570', '2023-12-20');
-
 
 -- state_types
 

@@ -11,8 +11,9 @@ public interface StepRepository extends JpaRepository<Step, UUID> {
     @Query("SELECT st.label " +
             "FROM Step s " +
             "JOIN s.stateType st " +
+            "JOIN s.inventory i " +
             "WHERE s.element.id = :elementId " +
-            "ORDER BY s.id DESC " +
-            "LIMIT 1")
+            "ORDER BY i.inventoryDate DESC" +
+            " LIMIT 1")
     String findLabelStateByElementId(UUID elementId);
 }

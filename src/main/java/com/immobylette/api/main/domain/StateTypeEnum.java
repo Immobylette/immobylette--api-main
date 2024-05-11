@@ -11,7 +11,7 @@ public enum StateTypeEnum {
     NEW("NEUF"),
     VERY_GOOD("TRES BON"),
     GOOD("BON"),
-    MEDIOCRE("MEDIOCRE"),
+    SO_SO("MOYEN"),
     BAD("MAUVAIS"),
     VERY_BAD("TRES MAUVAIS");
 

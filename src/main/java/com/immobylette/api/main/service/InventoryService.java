@@ -99,7 +99,9 @@ public class InventoryService {
             if (labelState == null) {
                 labelState = StateTypeEnum.VERY_GOOD.getName();
             }
-            //TODO: Wait for adding photo resource to populate the photos related attributes
+            elementSummaryDto.setNbBasePhotos(0);
+            elementSummaryDto.setNbPreviousPhotos(0);
+            elementSummaryDto.setPhoto("https://via.placeholder.com/150");
             elementSummaryDto.setState(labelState);
         }).toList();
         return elementSummaryDtos;

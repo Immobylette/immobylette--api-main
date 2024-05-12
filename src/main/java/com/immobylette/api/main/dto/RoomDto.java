@@ -20,6 +20,9 @@ public class RoomDto {
     private Integer nbOrder;
 
     @NotNull
+    private String name;
+
+    @NotNull
     private String description;
 
     @NotNull

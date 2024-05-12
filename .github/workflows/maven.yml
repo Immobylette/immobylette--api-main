@@ -77,21 +77,10 @@ jobs:
       - name: Build with Maven
         run: mvn clean install -DskipTests
 
-      - name: Get branch names.
-        id: branch-names
-        uses: tj-actions/branch-names@v8
-
-      - name: Extract source branch name
-        id: source_branch
-        run: | 
-          branch=$(git rev-parse --abbrev-ref HEAD)
-          echo "branch=$branch" >> "$GITHUB_OUTPUT"
-
-
       - name: Get prefix
         id: get_prefix
         run: |
-          prefix=$(echo "${{ steps.source_branch.outputs.branch }}" | cut -d'/' -f 1)")
+          prefix=$(echo "${{ github.event.head_commit.message }}" | cut -d':' -f 1)")
           echo "Prefix: $prefix"
           echo "prefix=$prefix" >> "$GITHUB_OUTPUT"
 
@@ -141,7 +130,7 @@ jobs:
 
       - name: Build and Push Snapshot
         env:
-          TAG_NAME: ${{ steps.format-image-name.outputs.TAG_NAME }}
+          TAG_NAME: ${{ steps.bump_version.outputs.TAG_NAME }}
         run: |
           echo "Building image for branch $TAG_NAME"
           docker build -t europe-west9-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/immobylette--api-main/immobylette--api-main:$TAG_NAME .
@@ -150,5 +139,5 @@ jobs:
       - name: Set new tag
         run: |
             git tag ${{ steps.bump_version.outputs.TAG_NAME }}
-            git push origin v${{ steps.bump_version.outputs.TAG_NAME }}
+            git push origin ${{ steps.bump_version.outputs.TAG_NAME }}
           

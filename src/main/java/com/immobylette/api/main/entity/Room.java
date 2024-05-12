@@ -22,6 +22,9 @@ public class Room {
     @Column(name = "id")
     private UUID id;
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @Column(name = "description", nullable = false)
     private String description;
 

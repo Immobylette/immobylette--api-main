@@ -48,7 +48,7 @@ public class PropertyService {
         });
     }
 
-    public PropertyDto getProperty(UUID id) throws PropertyNotFoundException {
+    public PropertyDto getProperty(UUID id) throws PropertyNotFoundException, PhotoNotFoundException, GCPStorageException {
         Property property = propertyRepository.findById(id).orElseThrow(() -> new PropertyNotFoundException(id));
         ThirdParty currentTenant = thirdPartyRepository.findCurrentTenantByPropertyId(id);
         UUID currentInventory = inventoryRepository.findCurrentInventoryByPropertyId(id);

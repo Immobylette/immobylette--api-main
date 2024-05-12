@@ -35,7 +35,7 @@ public class PropertyController {
     }
 
     @GetMapping("/properties/{id}")
-    public PropertyDto getProperty(@PathVariable UUID id) throws PropertyNotFoundException{
+    public PropertyDto getProperty(@PathVariable UUID id) throws PropertyNotFoundException, PhotoNotFoundException, GCPStorageException{
         return propertyService.getProperty(id);
     }
 

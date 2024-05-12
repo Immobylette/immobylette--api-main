@@ -46,13 +46,4 @@ public class RoomDto {
 
     @JsonProperty("room_type")
     private String roomType;
-
-    @Override
-    public String toString() {
-        return "RoomDto{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
 }

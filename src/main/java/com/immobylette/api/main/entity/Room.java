@@ -60,13 +60,4 @@ public class Room {
 
     @OneToMany(mappedBy = "room")
     private List<Element> elements;
-
-    @Override
-    public String toString() {
-        return "Room{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
 }

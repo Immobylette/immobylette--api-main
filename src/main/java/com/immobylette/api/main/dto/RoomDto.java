@@ -20,6 +20,9 @@ public class RoomDto {
     private Integer nbOrder;
 
     @NotNull
+    private String name;
+
+    @NotNull
     private String description;
 
     @NotNull
@@ -43,4 +46,13 @@ public class RoomDto {
 
     @JsonProperty("room_type")
     private String roomType;
+
+    @Override
+    public String toString() {
+        return "RoomDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

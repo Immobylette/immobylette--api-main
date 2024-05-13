@@ -80,7 +80,7 @@ jobs:
       - name: Get prefix
         id: get_prefix
         run: |
-          prefix=$(echo "${{ github.event.head_commit.message }}" | cut -d'/' -f 1)
+          prefix=$(echo $(git show -s --format=%s) | cut -d'/' -f 1)
           echo "Prefix: $prefix"
           echo "prefix=$prefix" >> "$GITHUB_OUTPUT"
 

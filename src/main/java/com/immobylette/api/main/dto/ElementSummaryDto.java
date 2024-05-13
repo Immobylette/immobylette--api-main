@@ -5,12 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Map;
 import java.util.UUID;
 
 @Builder
 @Getter
+@Setter
 public class ElementSummaryDto {
 
     @NotNull

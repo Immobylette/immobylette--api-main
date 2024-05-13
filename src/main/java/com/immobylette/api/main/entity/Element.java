@@ -3,6 +3,9 @@ package com.immobylette.api.main.entity;
 
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLHStoreType;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import java.util.List;
@@ -11,6 +14,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "elements")
+@Getter
+@Setter
 public class Element {
 
     @Id

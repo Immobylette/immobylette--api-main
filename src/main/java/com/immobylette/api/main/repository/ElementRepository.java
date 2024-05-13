@@ -12,8 +12,15 @@ public interface ElementRepository extends JpaRepository<Element, UUID> {
     @Query("SELECT e " +
             "FROM Element e " +
             "WHERE e.room.id = :roomId " +
-            "AND e.elementType.label IN :elementTypes "
+            "AND e.elementType.label IN :walls "
     )
-    List<Element> findElementsByRoomIdAndElementType(UUID roomId, List<String> elementTypes);
+    List<Element> findWallsByRoomId(UUID roomId, List<String> walls);
+
+    @Query("SELECT e " +
+            "FROM Element e " +
+            "WHERE e.room.id = :roomId " +
+            "AND e.elementType.label NOT IN :walls "
+    )
+    List<Element> findElementsByRoomId(UUID roomId, List<String> walls);
 
 }

@@ -1,6 +1,5 @@
 package com.immobylette.api.main.service;
 
-import com.immobylette.api.main.domain.ElementTypeEnum;
 import com.immobylette.api.main.domain.StateTypeEnum;
 import com.immobylette.api.main.domain.WallTypeEnum;
 import com.immobylette.api.main.dto.ElementSummaryDto;
@@ -52,8 +51,6 @@ public class InventoryService {
 
     private final ElementSummaryMapper elementSummaryMapper;
 
-    private final RoomMapper roomMapper;
-
     public UUID createInventory(UUID propertyId, UUID agentId)  throws PropertyNotAssociatedWithAnyLeaseException, AgentNotFoundException {
         Inventory inventory = new Inventory();
 
@@ -80,20 +77,29 @@ public class InventoryService {
     }
 
     public List<ElementSummaryDto> getElements(UUID id) throws InventoryNotFoundException {
-        return getElementsByTypes(id, Arrays.stream(ElementTypeEnum.values()).map(ElementTypeEnum::getName).toList());
-    }
 
-    public List<ElementSummaryDto> getWalls(UUID id) throws InventoryNotFoundException {
-        return getElementsByTypes(id,  Arrays.stream(WallTypeEnum.values()).map(WallTypeEnum::getName).toList());
-    }
-
-    private List<ElementSummaryDto> getElementsByTypes(UUID id, List<String> types) throws InventoryNotFoundException {
         Property property = propertyRepository.findByInventoryId(id);
         Room room = roomRepository.findCurrentRoomByInventoryIdAndRoomId(id, property.getId()).orElseThrow(() -> new InventoryNotFoundException(id));
 
-        List<Element> elements = elementRepository.findElementsByRoomIdAndElementType(room.getId(), types);
+        List<String> walls = Arrays.stream(WallTypeEnum.values()).map(WallTypeEnum::getName).toList();
+        List<Element> elements = elementRepository.findElementsByRoomId(room.getId(), walls);
         List<ElementSummaryDto> elementSummaryDtos = elements.stream().map(elementSummaryMapper::fromElement).toList();
 
+        return populateElementsSummariesDto(elementSummaryDtos);
+    }
+
+    public List<ElementSummaryDto> getWalls(UUID id) throws InventoryNotFoundException {
+        Property property = propertyRepository.findByInventoryId(id);
+        Room room = roomRepository.findCurrentRoomByInventoryIdAndRoomId(id, property.getId()).orElseThrow(() -> new InventoryNotFoundException(id));
+
+        List<String> walls = Arrays.stream(WallTypeEnum.values()).map(WallTypeEnum::getName).toList();
+        List<Element> elements = elementRepository.findWallsByRoomId(room.getId(), walls);
+        List<ElementSummaryDto> elementSummaryDtos = elements.stream().map(elementSummaryMapper::fromElement).toList();
+
+        return populateElementsSummariesDto(elementSummaryDtos);
+    }
+
+    private List<ElementSummaryDto> populateElementsSummariesDto(List<ElementSummaryDto> elementSummaryDtos) {
         elementSummaryDtos =  elementSummaryDtos.stream().peek(elementSummaryDto -> {
             String labelState = stepRepository.findLabelStateByElementId(elementSummaryDto.getId());
             if (labelState == null) {

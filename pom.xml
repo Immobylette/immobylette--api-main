@@ -21,6 +21,7 @@
 		<postgresql.version>42.6.2</postgresql.version>
 		<flywaypostgre.version>10.11.0</flywaypostgre.version>
 		<hypersistence-utils.version>3.7.0</hypersistence-utils.version>
+		<httpclient5.version>5.2.1</httpclient5.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -77,6 +78,11 @@
 			<groupId>io.hypersistence</groupId>
 			<artifactId>hypersistence-utils-hibernate-63</artifactId>
 			<version>${hypersistence-utils.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents.client5</groupId>
+			<artifactId>httpclient5</artifactId>
+			<version>${httpclient5.version}</version>
 		</dependency>
 	</dependencies>
 

@@ -2,9 +2,7 @@ package com.immobylette.api.main.controller;
 
 import com.immobylette.api.main.dto.PropertyDto;
 import com.immobylette.api.main.dto.PropertySummaryDto;
-import com.immobylette.api.main.exception.AgentNotFoundException;
-import com.immobylette.api.main.exception.PropertyNotAssociatedWithAnyLeaseException;
-import com.immobylette.api.main.exception.PropertyNotFoundException;
+import com.immobylette.api.main.exception.*;
 import com.immobylette.api.main.service.InventoryService;
 import com.immobylette.api.main.service.PropertyService;
 import lombok.AllArgsConstructor;
@@ -32,12 +30,12 @@ public class PropertyController {
             @RequestParam(name = "per_page", defaultValue = "10") int perPage,
             @RequestParam double latitude,
             @RequestParam double longitude
-    ) {
+    )throws PhotoNotFoundException, GCPStorageException {
         return propertyService.getProperties(page, perPage, latitude, longitude);
     }
 
     @GetMapping("/properties/{id}")
-    public PropertyDto getProperty(@PathVariable UUID id) throws PropertyNotFoundException{
+    public PropertyDto getProperty(@PathVariable UUID id) throws PropertyNotFoundException, PhotoNotFoundException, GCPStorageException{
         return propertyService.getProperty(id);
     }
 

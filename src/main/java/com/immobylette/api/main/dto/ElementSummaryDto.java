@@ -18,6 +18,9 @@ public class ElementSummaryDto {
     @NotNull
     private UUID id;
 
+    @NotNull
+    private String name;
+
     private String description;
 
     @NotNull
@@ -38,4 +41,7 @@ public class ElementSummaryDto {
 
     @NotNull
     private String state;
+
+    @NotNull
+    private Boolean checked;
 }

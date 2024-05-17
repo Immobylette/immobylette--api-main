@@ -1,5 +1,6 @@
 package com.immobylette.api.main.service;
 
+import com.immobylette.api.main.domain.InventoryStateLabel;
 import com.immobylette.api.main.domain.StateTypeEnum;
 import com.immobylette.api.main.domain.WallTypeEnum;
 import com.immobylette.api.main.dto.ElementSummaryDto;
@@ -85,7 +86,7 @@ public class InventoryService {
         List<Element> elements = elementRepository.findElementsByRoomId(room.getId(), walls);
         List<ElementSummaryDto> elementSummaryDtos = elements.stream().map(elementSummaryMapper::fromElement).toList();
 
-        return populateElementsSummariesDto(elementSummaryDtos);
+        return populateElementsSummariesDto(elementSummaryDtos, id);
     }
 
     public List<ElementSummaryDto> getWalls(UUID id) throws InventoryNotFoundException {
@@ -96,19 +97,24 @@ public class InventoryService {
         List<Element> elements = elementRepository.findWallsByRoomId(room.getId(), walls);
         List<ElementSummaryDto> elementSummaryDtos = elements.stream().map(elementSummaryMapper::fromElement).toList();
 
-        return populateElementsSummariesDto(elementSummaryDtos);
+        return populateElementsSummariesDto(elementSummaryDtos, id);
     }
 
-    private List<ElementSummaryDto> populateElementsSummariesDto(List<ElementSummaryDto> elementSummaryDtos) {
+    private List<ElementSummaryDto> populateElementsSummariesDto(List<ElementSummaryDto> elementSummaryDtos, UUID currentInventoryId) {
         elementSummaryDtos =  elementSummaryDtos.stream().peek(elementSummaryDto -> {
-            String labelState = stepRepository.findLabelStateByElementId(elementSummaryDto.getId());
-            if (labelState == null) {
-                labelState = StateTypeEnum.VERY_GOOD.getName();
+            InventoryStateLabel inventoryLabelState = stepRepository.findLabelStateByElementId(elementSummaryDto.getId());
+            String labelState = StateTypeEnum.VERY_GOOD.getName();
+            boolean checked = false;
+            if(inventoryLabelState != null) {
+                checked = currentInventoryId.equals(inventoryLabelState.getInventoryId());
+                labelState = inventoryLabelState.getStateLabel();
             }
+
             elementSummaryDto.setNbBasePhotos(0);
             elementSummaryDto.setNbPreviousPhotos(0);
             elementSummaryDto.setPhoto("https://via.placeholder.com/150");
             elementSummaryDto.setState(labelState);
+            elementSummaryDto.setChecked(checked);
         }).toList();
         return elementSummaryDtos;
     }

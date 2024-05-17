@@ -103,7 +103,7 @@ public class InventoryService {
     private List<ElementSummaryDto> populateElementsSummariesDto(List<ElementSummaryDto> elementSummaryDtos, UUID currentInventoryId) {
         elementSummaryDtos =  elementSummaryDtos.stream().peek(elementSummaryDto -> {
             InventoryStateLabel inventoryLabelState = stepRepository.findLabelStateByElementId(elementSummaryDto.getId());
-            String labelState = StateTypeEnum.VERY_GOOD.getName();
+            String labelState = StateTypeEnum.NEW.getName();
             boolean checked = false;
             if(inventoryLabelState != null) {
                 checked = currentInventoryId.equals(inventoryLabelState.getInventoryId());

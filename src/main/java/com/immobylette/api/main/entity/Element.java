@@ -3,7 +3,6 @@ package com.immobylette.api.main.entity;
 
 import io.hypersistence.utils.hibernate.type.basic.PostgreSQLHStoreType;
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
@@ -31,6 +30,9 @@ public class Element {
 
     @Column(name = "ref_photos_folder", nullable = false)
     private UUID photoFolder;
+
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "description")
     private String description;

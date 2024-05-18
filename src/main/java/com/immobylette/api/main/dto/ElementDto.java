@@ -17,6 +17,9 @@ public class ElementDto {
     @NotNull
     private UUID id;
 
+    @NotNull
+    private String name;
+
     private String description;
 
     @NotNull

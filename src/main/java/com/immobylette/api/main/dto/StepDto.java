@@ -2,10 +2,10 @@ package com.immobylette.api.main.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.immobylette.api.main.domain.Photo;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,5 +22,5 @@ public class StepDto {
     private String state;
 
     @NotNull
-    private List<MultipartFile> photos;
+    private List<Photo> photos;
 }

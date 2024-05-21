@@ -29,4 +29,4 @@ photo:
   url: ${PHOTO_API_URL:http://127.0.0.1:8080}
 
 auth:
-  api-key: ${AUTH_API_KEY:fakekey}
+  api-key: ${API_KEY:fakekey}

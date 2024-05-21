@@ -61,7 +61,14 @@ public class InventoryService {
         inventory.setAgent(thirdPartyRepository.findById(agentId).orElseThrow(() -> new AgentNotFoundException(agentId)));
         inventory.setInventoryDate(new Date());
 
-        InventoryTypeLabel inventoryTypeLabel = inventoryRepository.findLastInventoryType(propertyId).equals(InventoryTypeLabel.ENTREE.getLabel())?InventoryTypeLabel.SORTIE:InventoryTypeLabel.ENTREE;
+        String lastInventoryType = inventoryRepository.findLastInventoryType(propertyId);
+
+        InventoryTypeLabel inventoryTypeLabel = InventoryTypeLabel.ENTREE;
+
+        if(lastInventoryType != null) {
+            inventoryTypeLabel = inventoryRepository.findLastInventoryType(propertyId).equals(InventoryTypeLabel.ENTREE.getLabel())?InventoryTypeLabel.SORTIE:InventoryTypeLabel.ENTREE;
+        }
+
         inventory.setInventoryType(inventoryTypeRepository.findByLabel(inventoryTypeLabel));
 
         inventoryRepository.save(inventory);
@@ -90,6 +97,7 @@ public class InventoryService {
     }
 
     public List<ElementSummaryDto> getWalls(UUID id) throws InventoryNotFoundException {
+        System.out.println(id);
         Property property = propertyRepository.findByInventoryId(id);
         Room room = roomRepository.findCurrentRoomByInventoryIdAndRoomId(id, property.getId()).orElseThrow(() -> new InventoryNotFoundException(id));
 

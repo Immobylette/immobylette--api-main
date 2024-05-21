@@ -11,4 +11,5 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 public class PhotoConfig {
     private String url;
+    private String apiKey;
 }

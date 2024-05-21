@@ -10,14 +10,13 @@ import org.springframework.web.client.RestClient;
 @AllArgsConstructor
 public class RestClientConfig {
     private final PhotoConfig photoConfig;
-    private final AuthConfig authConfig;
 
     @Bean
     public RestClient restClient() {
         return RestClient.builder()
             .requestFactory(new HttpComponentsClientHttpRequestFactory())
-            .baseUrl(this.photoConfig.getUrl())
-                .defaultHeader("X-Api-Key", authConfig.getApiKey())
+            .baseUrl(photoConfig.getUrl())
+                .defaultHeader("X-Api-Key", photoConfig.getApiKey())
             .build();
     }
 

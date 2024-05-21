@@ -10,13 +10,14 @@ import org.springframework.web.client.RestClient;
 @AllArgsConstructor
 public class RestClientConfig {
     private final PhotoConfig photoConfig;
+    private final AuthConfig authConfig;
 
     @Bean
     public RestClient restClient() {
         return RestClient.builder()
             .requestFactory(new HttpComponentsClientHttpRequestFactory())
             .baseUrl(this.photoConfig.getUrl())
-//                .defaultHeader("My-Header", "Foo") TODO: Change this line to use authentication
+                .defaultHeader("X-Api-Key", authConfig.getApiKey())
             .build();
     }
 

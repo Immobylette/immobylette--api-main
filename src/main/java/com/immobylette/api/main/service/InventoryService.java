@@ -97,7 +97,6 @@ public class InventoryService {
     }
 
     public List<ElementSummaryDto> getWalls(UUID id) throws InventoryNotFoundException {
-        System.out.println(id);
         Property property = propertyRepository.findByInventoryId(id);
         Room room = roomRepository.findCurrentRoomByInventoryIdAndRoomId(id, property.getId()).orElseThrow(() -> new InventoryNotFoundException(id));
 

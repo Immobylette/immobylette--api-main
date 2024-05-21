@@ -3,27 +3,24 @@ package com.immobylette.api.main.service;
 import com.immobylette.api.main.domain.InventoryStateLabel;
 import com.immobylette.api.main.domain.StateTypeEnum;
 import com.immobylette.api.main.domain.WallTypeEnum;
-import com.immobylette.api.main.dto.ElementSummaryDto;
-import com.immobylette.api.main.dto.RoomDto;
-import com.immobylette.api.main.entity.Element;
-import com.immobylette.api.main.entity.Inventory;
-import com.immobylette.api.main.entity.Property;
-import com.immobylette.api.main.entity.Room;
-import com.immobylette.api.main.exception.InventoryNotFoundException;
+import com.immobylette.api.main.dto.*;
+import com.immobylette.api.main.entity.*;
+import com.immobylette.api.main.exception.*;
+import com.immobylette.api.main.mapper.ElementMapper;
 import com.immobylette.api.main.mapper.ElementSummaryMapper;
 import com.immobylette.api.main.mapper.RoomMapper;
+import com.immobylette.api.main.mapper.StepReceivedMapper;
 import com.immobylette.api.main.repository.ElementRepository;
 import com.immobylette.api.main.repository.PropertyRepository;
 import com.immobylette.api.main.repository.RoomRepository;
 import com.immobylette.api.main.repository.StepRepository;
-import com.immobylette.api.main.entity.Lease;
 import com.immobylette.api.main.entity.enums.InventoryTypeLabel;
-import com.immobylette.api.main.exception.AgentNotFoundException;
-import com.immobylette.api.main.exception.PropertyNotAssociatedWithAnyLeaseException;
 import com.immobylette.api.main.repository.InventoryRepository;
 import com.immobylette.api.main.repository.InventoryTypeRepository;
 import com.immobylette.api.main.repository.LeaseRepository;
 import com.immobylette.api.main.repository.ThirdPartyRepository;
+import com.immobylette.api.main.resource.FolderResource;
+import com.immobylette.api.main.resource.PhotoResource;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +49,15 @@ public class InventoryService {
 
     private final ElementSummaryMapper elementSummaryMapper;
 
+    private final ElementMapper elementMapper;
+
+    private final PhotoResource photoResource;
+
+    private final FolderResource folderResource;
+
+    private final StepReceivedMapper stepMapper;
+
+
     public UUID createInventory(UUID propertyId, UUID agentId)  throws PropertyNotAssociatedWithAnyLeaseException, AgentNotFoundException {
         Inventory inventory = new Inventory();
 
@@ -72,7 +78,8 @@ public class InventoryService {
 
     public RoomDto getCurrentRoom(UUID id) throws InventoryNotFoundException {
         Property property = propertyRepository.findByInventoryId(id);
-        Room room = roomRepository.findCurrentRoomByInventoryIdAndRoomId(id, property.getId()).orElseThrow(() -> new InventoryNotFoundException(id));
+        Room room = roomRepository.findCurrentRoomByInventoryIdAndPropertyId(id, property.getId()).orElseThrow(()
+                -> new RoomNotFoundException(id, property.getId()));
 
         return roomMapper.fromRoom(room);
     }
@@ -80,7 +87,8 @@ public class InventoryService {
     public List<ElementSummaryDto> getElements(UUID id) throws InventoryNotFoundException {
 
         Property property = propertyRepository.findByInventoryId(id);
-        Room room = roomRepository.findCurrentRoomByInventoryIdAndRoomId(id, property.getId()).orElseThrow(() -> new InventoryNotFoundException(id));
+        Room room = roomRepository.findCurrentRoomByInventoryIdAndPropertyId(id, property.getId()).orElseThrow(()
+                -> new RoomNotFoundException(id, property.getId()));
 
         List<String> walls = Arrays.stream(WallTypeEnum.values()).map(WallTypeEnum::getName).toList();
         List<Element> elements = elementRepository.findElementsByRoomId(room.getId(), walls);
@@ -91,7 +99,8 @@ public class InventoryService {
 
     public List<ElementSummaryDto> getWalls(UUID id) throws InventoryNotFoundException {
         Property property = propertyRepository.findByInventoryId(id);
-        Room room = roomRepository.findCurrentRoomByInventoryIdAndRoomId(id, property.getId()).orElseThrow(() -> new InventoryNotFoundException(id));
+        Room room = roomRepository.findCurrentRoomByInventoryIdAndPropertyId(id, property.getId()).orElseThrow(()
+                -> new RoomNotFoundException(id, property.getId()));
 
         List<String> walls = Arrays.stream(WallTypeEnum.values()).map(WallTypeEnum::getName).toList();
         List<Element> elements = elementRepository.findWallsByRoomId(room.getId(), walls);
@@ -118,4 +127,25 @@ public class InventoryService {
         }).toList();
         return elementSummaryDtos;
     }
+
+    public ElementDto getElement(UUID inventoryId, UUID elementId) {
+        Element element = elementRepository.findElementById(elementId).orElseThrow(()
+                -> new ElementNotFoundException(elementId));
+
+        Step step = stepRepository.findStepByElementIdAndInventoryId(elementId, inventoryId);
+        StepReceivedDto stepDto = null;
+        if(step != null){
+            FolderDto folderPreviousPhoto = folderResource.getFolder(step.getRefPhotosFolder());
+            if(folderPreviousPhoto != null){
+                stepDto = stepMapper.fromStep(step, folderPreviousPhoto);
+            }
+        }
+
+        PhotoDto photo = photoResource.getPhoto(element.getPhoto());
+        FolderDto folderBasePhoto = folderResource.getFolder(element.getPhotoFolder());
+
+        return elementMapper.fromElement(element, photo, folderBasePhoto, stepDto, null);
+    }
+
+
 }

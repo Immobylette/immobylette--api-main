@@ -1,7 +1,10 @@
 package com.immobylette.api.main.controller;
 
+import com.immobylette.api.main.dto.ElementDto;
 import com.immobylette.api.main.dto.ElementSummaryDto;
 import com.immobylette.api.main.dto.RoomDto;
+import com.immobylette.api.main.exception.ElementNotFoundException;
+import com.immobylette.api.main.exception.FolderNotFoundException;
 import com.immobylette.api.main.exception.InventoryNotFoundException;
 import com.immobylette.api.main.service.InventoryService;
 import lombok.AllArgsConstructor;
@@ -30,5 +33,11 @@ public class InventoryController {
     @GetMapping("/inventories/{id}/walls")
     public List<ElementSummaryDto> getWalls(@PathVariable UUID id) throws InventoryNotFoundException {
         return inventoryService.getWalls(id);
+    }
+
+    @GetMapping("/inventories/{inventoryId}/elements/{elementId}")
+    public ElementDto getElement(@PathVariable UUID inventoryId, @PathVariable UUID elementId)
+            throws ElementNotFoundException, FolderNotFoundException {
+        return inventoryService.getElement(inventoryId, elementId);
     }
 }

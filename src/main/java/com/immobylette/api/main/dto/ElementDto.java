@@ -39,5 +39,9 @@ public class ElementDto {
     private List<String> previousPhotos;
 
     @NotNull
-    private StepDto step;
+    private StepSentDto stepSent;
+
+    @NotNull
+    private StepReceivedDto stepReceived;
+
 }

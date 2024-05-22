@@ -79,7 +79,7 @@ public class InventoryService {
 
 
     public RoomDto getCurrentRoom(UUID id) throws InventoryNotFoundException, RoomNotFoundException {
-        inventoryRepository.find(id).orElseThrow(()
+        inventoryRepository.findById(id).orElseThrow(()
                 -> new InventoryNotFoundException(id));
 
         Property property = propertyRepository.findByInventoryId(id);
@@ -90,7 +90,7 @@ public class InventoryService {
     }
 
     public List<ElementSummaryDto> getElements(UUID id) throws InventoryNotFoundException, RoomNotFoundException {
-        inventoryRepository.find(id).orElseThrow(()
+        inventoryRepository.findById(id).orElseThrow(()
                 -> new InventoryNotFoundException(id));
 
         Property property = propertyRepository.findByInventoryId(id);
@@ -105,7 +105,7 @@ public class InventoryService {
     }
 
     public List<ElementSummaryDto> getWalls(UUID id) throws InventoryNotFoundException, RoomNotFoundException {
-        inventoryRepository.find(id).orElseThrow(()
+        inventoryRepository.findById(id).orElseThrow(()
                 -> new InventoryNotFoundException(id));
 
         Property property = propertyRepository.findByInventoryId(id);
@@ -142,7 +142,7 @@ public class InventoryService {
             throws ElementNotFoundException, FolderNotFoundException, InventoryNotFoundException,
             StepNotFoundException {
 
-        inventoryRepository.find(inventoryId).orElseThrow(()
+        inventoryRepository.findById(inventoryId).orElseThrow(()
                 -> new InventoryNotFoundException(inventoryId));
 
         Element element = elementRepository.findByInventoryId(elementId, inventoryId).orElseThrow(()

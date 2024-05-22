@@ -25,9 +25,12 @@ public interface ElementRepository extends JpaRepository<Element, UUID> {
     List<Element> findElementsByRoomId(UUID roomId, List<String> walls);
 
     @Query("SELECT e " +
-            "FROM Element e " +
-            "WHERE e.id = :elementId "
+            "FROM Step s " +
+            "JOIN s.element e " +
+            "JOIN s.inventory i " +
+            "WHERE e.id = :elementId " +
+            "AND i.id = :inventoryId "
     )
-    Optional<Element> findElementById(UUID elementId);
+    Optional<Element> findByInventoryId(UUID elementId, UUID inventoryId);
 
 }

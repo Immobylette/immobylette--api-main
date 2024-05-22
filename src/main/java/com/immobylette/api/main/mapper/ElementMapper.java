@@ -17,33 +17,36 @@ public interface ElementMapper {
             @Mapping(target = "id", source = "element.id"),
             @Mapping(target = "description", source = "element.description"),
             @Mapping(target = "photo", source = "photoDto", qualifiedByName = "photoUrl"),
-            @Mapping(target = "basePhotos", source = "folder", qualifiedByName = "photosBaseFolder"),
-            @Mapping(target = "previousPhotos", source = "stepReceivedDto", qualifiedByName = "photoPreviousFolder"),
+            @Mapping(target = "basePhotos", source = "folderBasePhotos", qualifiedByName = "photosBaseFolder"),
+            @Mapping(target = "previousPhotos", source = "folderPreviousPhotos", qualifiedByName = "photosPreviousFolder"),
             @Mapping(target = "type", source = "element.elementType", qualifiedByName = "elementType"),
-            @Mapping(target = "stepReceived", source = "stepReceivedDto"),
-            @Mapping(target = "stepSent", source = "stepSentDto")
+            @Mapping(target = "step", source = "stepReceivedDto")
     })
     ElementDto fromElement(
             Element element,
             PhotoDto photoDto,
-            FolderDto folder,
-            StepReceivedDto stepReceivedDto,
-            StepSentDto stepSentDto
+            FolderDto folderBasePhotos,
+            FolderDto folderPreviousPhotos,
+            StepReceivedDto stepReceivedDto
             );
 
     @Named("photosBaseFolder")
-    static List<String> photosBaseFolder(FolderDto folder) {
-        return folder.getPhotos().stream()
+    static List<String> photosBaseFolder(FolderDto folderBasePhotos) {
+        return folderBasePhotos.getPhotos().stream()
                 .map(PhotoDto::getUrl)
                 .collect(Collectors.toList());
     }
 
-    @Named("photoPreviousFolder")
-    static List<String> photoPreviousFolder(StepReceivedDto stepReceivedDto) {
-        return stepReceivedDto.getPhotos()
-                .stream()
-                .map(PhotoDto::getUrl)
-                .toList();
+    @Named("photosPreviousFolder")
+    static List<String> photosPreviousFolder(FolderDto folderPreviousPhotos) {
+        if(folderPreviousPhotos != null){
+            return folderPreviousPhotos.getPhotos().stream()
+                    .map(PhotoDto::getUrl)
+                    .collect(Collectors.toList());
+        }
+        else{
+            return null;
+        }
     }
 
     @Named("elementType")

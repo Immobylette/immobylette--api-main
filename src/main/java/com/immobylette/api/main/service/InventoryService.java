@@ -22,6 +22,8 @@ import com.immobylette.api.main.repository.ThirdPartyRepository;
 import com.immobylette.api.main.resource.FolderResource;
 import com.immobylette.api.main.resource.PhotoResource;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -76,7 +78,10 @@ public class InventoryService {
     }
 
 
-    public RoomDto getCurrentRoom(UUID id) throws InventoryNotFoundException {
+    public RoomDto getCurrentRoom(UUID id) throws InventoryNotFoundException, RoomNotFoundException {
+        inventoryRepository.find(id).orElseThrow(()
+                -> new InventoryNotFoundException(id));
+
         Property property = propertyRepository.findByInventoryId(id);
         Room room = roomRepository.findCurrentRoomByInventoryIdAndPropertyId(id, property.getId()).orElseThrow(()
                 -> new RoomNotFoundException(id, property.getId()));
@@ -84,7 +89,9 @@ public class InventoryService {
         return roomMapper.fromRoom(room);
     }
 
-    public List<ElementSummaryDto> getElements(UUID id) throws InventoryNotFoundException {
+    public List<ElementSummaryDto> getElements(UUID id) throws InventoryNotFoundException, RoomNotFoundException {
+        inventoryRepository.find(id).orElseThrow(()
+                -> new InventoryNotFoundException(id));
 
         Property property = propertyRepository.findByInventoryId(id);
         Room room = roomRepository.findCurrentRoomByInventoryIdAndPropertyId(id, property.getId()).orElseThrow(()
@@ -97,7 +104,10 @@ public class InventoryService {
         return populateElementsSummariesDto(elementSummaryDtos, id);
     }
 
-    public List<ElementSummaryDto> getWalls(UUID id) throws InventoryNotFoundException {
+    public List<ElementSummaryDto> getWalls(UUID id) throws InventoryNotFoundException, RoomNotFoundException {
+        inventoryRepository.find(id).orElseThrow(()
+                -> new InventoryNotFoundException(id));
+
         Property property = propertyRepository.findByInventoryId(id);
         Room room = roomRepository.findCurrentRoomByInventoryIdAndPropertyId(id, property.getId()).orElseThrow(()
                 -> new RoomNotFoundException(id, property.getId()));
@@ -128,23 +138,37 @@ public class InventoryService {
         return elementSummaryDtos;
     }
 
-    public ElementDto getElement(UUID inventoryId, UUID elementId) {
-        Element element = elementRepository.findElementById(elementId).orElseThrow(()
-                -> new ElementNotFoundException(elementId));
+    public ElementDto getElement(UUID inventoryId, UUID elementId)
+            throws ElementNotFoundException, FolderNotFoundException, InventoryNotFoundException,
+            StepNotFoundException {
 
-        Step step = stepRepository.findStepByElementIdAndInventoryId(elementId, inventoryId);
-        StepReceivedDto stepDto = null;
-        if(step != null){
-            FolderDto folderPreviousPhoto = folderResource.getFolder(step.getRefPhotosFolder());
-            if(folderPreviousPhoto != null){
-                stepDto = stepMapper.fromStep(step, folderPreviousPhoto);
-            }
+        inventoryRepository.find(inventoryId).orElseThrow(()
+                -> new InventoryNotFoundException(inventoryId));
+
+        Element element = elementRepository.findByInventoryId(elementId, inventoryId).orElseThrow(()
+                -> new ElementNotFoundException(elementId, inventoryId));
+
+        Pageable pageable = PageRequest.of(0, 2);
+        List<Step> steps = stepRepository.findStepsByElementId(elementId, pageable);
+
+        StepReceivedDto stepDto;
+        if(steps.size() > 0){
+            FolderDto folder = folderResource.getFolder(steps.get(0).getRefPhotosFolder());
+            stepDto = stepMapper.fromStep(steps.get(0), folder);
+        }
+        else{
+            throw new StepNotFoundException(elementId);
+        }
+
+        FolderDto folderPreviousPhoto = null;
+        if(steps.size() > 1){
+            folderPreviousPhoto = folderResource.getFolder(steps.get(1).getRefPhotosFolder());
         }
 
         PhotoDto photo = photoResource.getPhoto(element.getPhoto());
         FolderDto folderBasePhoto = folderResource.getFolder(element.getPhotoFolder());
 
-        return elementMapper.fromElement(element, photo, folderBasePhoto, stepDto, null);
+        return elementMapper.fromElement(element, photo, folderBasePhoto, folderPreviousPhoto, stepDto);
     }
 
 

@@ -6,11 +6,25 @@ import com.immobylette.api.main.domain.StateTypeEnum;
 import com.immobylette.api.main.domain.WallTypeEnum;
 import com.immobylette.api.main.dto.ElementSummaryDto;
 import com.immobylette.api.main.dto.RoomDto;
-import com.immobylette.api.main.entity.*;
+import com.immobylette.api.main.entity.Inventory;
+import com.immobylette.api.main.entity.Property;
+import com.immobylette.api.main.entity.Room;
+import com.immobylette.api.main.entity.ThirdParty;
+import com.immobylette.api.main.entity.Element;
+import com.immobylette.api.main.entity.Lease;
+import com.immobylette.api.main.entity.SignatureInventoryThirdParty;
 import com.immobylette.api.main.exception.InventoryNotFoundException;
 import com.immobylette.api.main.mapper.ElementSummaryMapper;
 import com.immobylette.api.main.mapper.RoomMapper;
-import com.immobylette.api.main.repository.*;
+import com.immobylette.api.main.repository.ThirdPartyRepository;
+import com.immobylette.api.main.repository.InventoryRepository;
+import com.immobylette.api.main.repository.InventoryTypeRepository;
+import com.immobylette.api.main.repository.LeaseRepository;
+import com.immobylette.api.main.repository.PropertyRepository;
+import com.immobylette.api.main.repository.RoomRepository;
+import com.immobylette.api.main.repository.SignatureInventoryThirdPartyRepository;
+import com.immobylette.api.main.repository.ElementRepository;
+import com.immobylette.api.main.repository.StepRepository;
 import com.immobylette.api.main.entity.enums.InventoryTypeLabel;
 import com.immobylette.api.main.exception.AgentNotFoundException;
 import com.immobylette.api.main.exception.PropertyNotAssociatedWithAnyLeaseException;
@@ -117,7 +131,7 @@ public class InventoryService {
         return elementSummaryDtos;
     }
 
-    public void sign(UUID id, SignatureTypeEnum type) throws InventoryNotFoundException, AgentNotFoundException {
+    public void sign(UUID id, SignatureTypeEnum type) throws InventoryNotFoundException {
         Inventory inventory = inventoryRepository.findById(id).orElseThrow(() -> new InventoryNotFoundException(id));
 
         var signatureBuilder = SignatureInventoryThirdParty.builder()
@@ -126,8 +140,7 @@ public class InventoryService {
 
         switch (type) {
             case AGENT:
-                ThirdParty agent = thirdPartyRepository.findAgentByInventoryId(id);
-                signatureBuilder.thirdParty(agent);
+                signatureBuilder.thirdParty(inventory.getAgent());
                 break;
             case TENANT:
                 Property property = propertyRepository.findByInventoryId(id);

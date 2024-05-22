@@ -1,29 +1,19 @@
 package com.immobylette.api.main.service;
 
 import com.immobylette.api.main.domain.InventoryStateLabel;
+import com.immobylette.api.main.domain.SignatureTypeEnum;
 import com.immobylette.api.main.domain.StateTypeEnum;
 import com.immobylette.api.main.domain.WallTypeEnum;
 import com.immobylette.api.main.dto.ElementSummaryDto;
 import com.immobylette.api.main.dto.RoomDto;
-import com.immobylette.api.main.entity.Element;
-import com.immobylette.api.main.entity.Inventory;
-import com.immobylette.api.main.entity.Property;
-import com.immobylette.api.main.entity.Room;
+import com.immobylette.api.main.entity.*;
 import com.immobylette.api.main.exception.InventoryNotFoundException;
 import com.immobylette.api.main.mapper.ElementSummaryMapper;
 import com.immobylette.api.main.mapper.RoomMapper;
-import com.immobylette.api.main.repository.ElementRepository;
-import com.immobylette.api.main.repository.PropertyRepository;
-import com.immobylette.api.main.repository.RoomRepository;
-import com.immobylette.api.main.repository.StepRepository;
-import com.immobylette.api.main.entity.Lease;
+import com.immobylette.api.main.repository.*;
 import com.immobylette.api.main.entity.enums.InventoryTypeLabel;
 import com.immobylette.api.main.exception.AgentNotFoundException;
 import com.immobylette.api.main.exception.PropertyNotAssociatedWithAnyLeaseException;
-import com.immobylette.api.main.repository.InventoryRepository;
-import com.immobylette.api.main.repository.InventoryTypeRepository;
-import com.immobylette.api.main.repository.LeaseRepository;
-import com.immobylette.api.main.repository.ThirdPartyRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +31,7 @@ public class InventoryService {
     private final ThirdPartyRepository thirdPartyRepository;
     private final LeaseRepository leaseRepository;
     private final RoomRepository roomRepository;
+    private final SignatureInventoryThirdPartyRepository signatureInventoryThirdPartyRepository;
 
     private final PropertyRepository propertyRepository;
 
@@ -124,5 +115,27 @@ public class InventoryService {
             elementSummaryDto.setChecked(checked);
         }).toList();
         return elementSummaryDtos;
+    }
+
+    public void sign(UUID id, SignatureTypeEnum type) throws InventoryNotFoundException, AgentNotFoundException {
+        Inventory inventory = inventoryRepository.findById(id).orElseThrow(() -> new InventoryNotFoundException(id));
+
+        var signatureBuilder = SignatureInventoryThirdParty.builder()
+                .inventory(inventory)
+                .signatureDate(new Date());
+
+        switch (type) {
+            case AGENT:
+                ThirdParty agent = thirdPartyRepository.findAgentByInventoryId(id);
+                signatureBuilder.thirdParty(agent);
+                break;
+            case TENANT:
+                Property property = propertyRepository.findByInventoryId(id);
+                ThirdParty currentTenant = thirdPartyRepository.findCurrentTenantByPropertyId(property.getId());
+                signatureBuilder.thirdParty(currentTenant);
+                break;
+        }
+
+        signatureInventoryThirdPartyRepository.save(signatureBuilder.build());
     }
 }

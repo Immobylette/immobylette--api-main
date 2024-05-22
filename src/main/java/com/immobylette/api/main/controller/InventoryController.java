@@ -2,12 +2,12 @@ package com.immobylette.api.main.controller;
 
 import com.immobylette.api.main.dto.ElementSummaryDto;
 import com.immobylette.api.main.dto.RoomDto;
+import com.immobylette.api.main.dto.SignatureDto;
 import com.immobylette.api.main.exception.InventoryNotFoundException;
 import com.immobylette.api.main.service.InventoryService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,5 +30,10 @@ public class InventoryController {
     @GetMapping("/inventories/{id}/walls")
     public List<ElementSummaryDto> getWalls(@PathVariable UUID id) throws InventoryNotFoundException {
         return inventoryService.getWalls(id);
+    }
+
+    @PostMapping("/inventories/{id}/sign")
+    public void sign(@PathVariable UUID id, @Valid @RequestBody SignatureDto signature) throws InventoryNotFoundException {
+        inventoryService.sign(id, signature.getType());
     }
 }

@@ -20,15 +20,13 @@ public interface ElementMapper {
             @Mapping(target = "photo", source = "photoDto", qualifiedByName = "photoUrl"),
             @Mapping(target = "basePhotos", source = "folderBasePhotos", qualifiedByName = "photosBaseFolder"),
             @Mapping(target = "previousPhotos", source = "folderPreviousPhotos", qualifiedByName = "photosPreviousFolder"),
-            @Mapping(target = "type", source = "element.elementType", qualifiedByName = "elementType"),
-            @Mapping(target = "step", source = "stepReceivedDto")
+            @Mapping(target = "type", source = "element.elementType", qualifiedByName = "elementType")
     })
     ElementDto fromElement(
             Element element,
             PhotoDto photoDto,
             FolderDto folderBasePhotos,
-            FolderDto folderPreviousPhotos,
-            StepReceivedDto stepReceivedDto
+            FolderDto folderPreviousPhotos
             );
 
     @Named("photosBaseFolder")

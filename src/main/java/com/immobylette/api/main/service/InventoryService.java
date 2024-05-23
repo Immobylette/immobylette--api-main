@@ -9,7 +9,6 @@ import com.immobylette.api.main.exception.*;
 import com.immobylette.api.main.mapper.ElementMapper;
 import com.immobylette.api.main.mapper.ElementSummaryMapper;
 import com.immobylette.api.main.mapper.RoomMapper;
-import com.immobylette.api.main.mapper.StepReceivedMapper;
 import com.immobylette.api.main.repository.ElementRepository;
 import com.immobylette.api.main.repository.PropertyRepository;
 import com.immobylette.api.main.repository.RoomRepository;
@@ -56,8 +55,6 @@ public class InventoryService {
     private final PhotoResource photoResource;
 
     private final FolderResource folderResource;
-
-    private final StepReceivedMapper stepMapper;
 
 
     public UUID createInventory(UUID propertyId, UUID agentId)  throws PropertyNotAssociatedWithAnyLeaseException, AgentNotFoundException {
@@ -151,15 +148,6 @@ public class InventoryService {
         Pageable pageable = PageRequest.of(0, 2);
         List<Step> steps = stepRepository.findStepsByElementId(elementId, pageable);
 
-        StepReceivedDto stepDto;
-        if(steps.size() > 0){
-            FolderDto folder = folderResource.getFolder(steps.get(0).getRefPhotosFolder());
-            stepDto = stepMapper.fromStep(steps.get(0), folder);
-        }
-        else{
-            throw new StepNotFoundException(elementId);
-        }
-
         FolderDto folderPreviousPhoto = null;
         if(steps.size() > 1){
             folderPreviousPhoto = folderResource.getFolder(steps.get(1).getRefPhotosFolder());
@@ -168,7 +156,7 @@ public class InventoryService {
         PhotoDto photo = photoResource.getPhoto(element.getPhoto());
         FolderDto folderBasePhoto = folderResource.getFolder(element.getPhotoFolder());
 
-        return elementMapper.fromElement(element, photo, folderBasePhoto, folderPreviousPhoto, stepDto);
+        return elementMapper.fromElement(element, photo, folderBasePhoto, folderPreviousPhoto);
     }
 
 

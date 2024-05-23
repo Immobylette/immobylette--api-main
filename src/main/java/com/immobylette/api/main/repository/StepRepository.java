@@ -20,6 +20,7 @@ public interface StepRepository extends JpaRepository<Step, UUID> {
             " LIMIT 1")
     InventoryStateLabel findLabelStateByElementId(UUID elementId);
 
+
     @Query("SELECT s " +
             "FROM Step s " +
             "JOIN s.inventory i " +
@@ -27,4 +28,5 @@ public interface StepRepository extends JpaRepository<Step, UUID> {
             "WHERE s.element.id = :elementId " +
             "ORDER BY i.inventoryDate DESC ")
     List<Step> findStepsByElementId(UUID elementId, Pageable pageable);
+
 }

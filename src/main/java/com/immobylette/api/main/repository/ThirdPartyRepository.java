@@ -20,4 +20,12 @@ public interface ThirdPartyRepository extends JpaRepository<ThirdParty, UUID> {
             "ORDER BY l.endDate DESC " +
             "LIMIT 1")
     ThirdParty findCurrentTenantByPropertyId(UUID id);
+
+    @Query(
+        "SELECT a " +
+        "FROM Inventory i " +
+        "JOIN i.agent a " +
+        "WHERE i.id = :id"
+    )
+    ThirdParty findAgentByInventoryId(UUID id);
 }

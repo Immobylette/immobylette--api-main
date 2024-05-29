@@ -9,6 +9,7 @@ import com.immobylette.api.main.entity.Step;
 import com.immobylette.api.main.exception.ElementNotFoundException;
 import com.immobylette.api.main.exception.GCPStorageException;
 import com.immobylette.api.main.exception.InventoryNotFoundException;
+import com.immobylette.api.main.exception.PhotosAndDescriptionsSizeException;
 import com.immobylette.api.main.mapper.StepMapper;
 import com.immobylette.api.main.repository.ElementRepository;
 import com.immobylette.api.main.repository.InventoryRepository;
@@ -44,6 +45,10 @@ public class StepService {
         StateType stateType = stateTypeRepository.findByLabel(stepDto.getState().getName());
 
         List<PhotoDto> photoList = new ArrayList<>();
+
+        if(photos.size() != stepDto.getPhotosDescriptions().size()) {
+            throw new PhotosAndDescriptionsSizeException();
+        }
 
         Iterator<MultipartFile> photoIterator = photos.iterator();
         Iterator<String> descriptionIterator = stepDto.getPhotosDescriptions().iterator();

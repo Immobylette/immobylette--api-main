@@ -44,6 +44,8 @@ public class InventoryController {
     public ElementDto getElement(@PathVariable UUID inventoryId, @PathVariable UUID elementId)
             throws ElementNotFoundException, FolderNotFoundException, InventoryNotFoundException, StepNotFoundException {
         return inventoryService.getElement(inventoryId, elementId);
+    }
+
 
     @PostMapping("/inventories/{id}/sign")
     public void sign(@PathVariable UUID id, @Valid @RequestBody SignatureDto signature) throws InventoryNotFoundException {

@@ -1,6 +1,7 @@
 package com.immobylette.api.main.service;
 
 import com.immobylette.api.main.domain.InventoryStateLabel;
+import com.immobylette.api.main.domain.SignatureTypeEnum;
 import com.immobylette.api.main.domain.StateTypeEnum;
 import com.immobylette.api.main.domain.WallTypeEnum;
 import com.immobylette.api.main.dto.*;
@@ -9,15 +10,16 @@ import com.immobylette.api.main.exception.*;
 import com.immobylette.api.main.mapper.ElementMapper;
 import com.immobylette.api.main.mapper.ElementSummaryMapper;
 import com.immobylette.api.main.mapper.RoomMapper;
-import com.immobylette.api.main.repository.ElementRepository;
-import com.immobylette.api.main.repository.PropertyRepository;
-import com.immobylette.api.main.repository.RoomRepository;
-import com.immobylette.api.main.repository.StepRepository;
-import com.immobylette.api.main.entity.enums.InventoryTypeLabel;
+import com.immobylette.api.main.repository.ThirdPartyRepository;
 import com.immobylette.api.main.repository.InventoryRepository;
 import com.immobylette.api.main.repository.InventoryTypeRepository;
 import com.immobylette.api.main.repository.LeaseRepository;
-import com.immobylette.api.main.repository.ThirdPartyRepository;
+import com.immobylette.api.main.repository.PropertyRepository;
+import com.immobylette.api.main.repository.RoomRepository;
+import com.immobylette.api.main.repository.SignatureInventoryThirdPartyRepository;
+import com.immobylette.api.main.repository.ElementRepository;
+import com.immobylette.api.main.repository.StepRepository;
+import com.immobylette.api.main.entity.enums.InventoryTypeLabel;
 import com.immobylette.api.main.resource.FolderResource;
 import com.immobylette.api.main.resource.PhotoResource;
 import lombok.AllArgsConstructor;
@@ -39,6 +41,7 @@ public class InventoryService {
     private final ThirdPartyRepository thirdPartyRepository;
     private final LeaseRepository leaseRepository;
     private final RoomRepository roomRepository;
+    private final SignatureInventoryThirdPartyRepository signatureInventoryThirdPartyRepository;
 
     private final PropertyRepository propertyRepository;
 
@@ -66,7 +69,14 @@ public class InventoryService {
         inventory.setAgent(thirdPartyRepository.findById(agentId).orElseThrow(() -> new AgentNotFoundException(agentId)));
         inventory.setInventoryDate(new Date());
 
-        InventoryTypeLabel inventoryTypeLabel = inventoryRepository.findLastInventoryType(propertyId).equals(InventoryTypeLabel.ENTREE.getLabel())?InventoryTypeLabel.SORTIE:InventoryTypeLabel.ENTREE;
+        String lastInventoryType = inventoryRepository.findLastInventoryType(propertyId);
+
+        InventoryTypeLabel inventoryTypeLabel = InventoryTypeLabel.ENTREE;
+
+        if(lastInventoryType != null) {
+            inventoryTypeLabel = inventoryRepository.findLastInventoryType(propertyId).equals(InventoryTypeLabel.ENTREE.getLabel())?InventoryTypeLabel.SORTIE:InventoryTypeLabel.ENTREE;
+        }
+
         inventory.setInventoryType(inventoryTypeRepository.findByLabel(inventoryTypeLabel));
 
         inventoryRepository.save(inventory);
@@ -160,4 +170,24 @@ public class InventoryService {
     }
 
 
+    public void sign(UUID id, SignatureTypeEnum type) throws InventoryNotFoundException {
+        Inventory inventory = inventoryRepository.findById(id).orElseThrow(() -> new InventoryNotFoundException(id));
+
+        var signatureBuilder = SignatureInventoryThirdParty.builder()
+                .inventory(inventory)
+                .signatureDate(new Date());
+
+        switch (type) {
+            case AGENT:
+                signatureBuilder.thirdParty(inventory.getAgent());
+                break;
+            case TENANT:
+                Property property = propertyRepository.findByInventoryId(id);
+                ThirdParty currentTenant = thirdPartyRepository.findCurrentTenantByPropertyId(property.getId());
+                signatureBuilder.thirdParty(currentTenant);
+                break;
+        }
+
+        signatureInventoryThirdPartyRepository.save(signatureBuilder.build());
+    }
 }

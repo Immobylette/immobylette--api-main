@@ -15,8 +15,8 @@ public class RestClientConfig {
     public RestClient restClient() {
         return RestClient.builder()
             .requestFactory(new HttpComponentsClientHttpRequestFactory())
-            .baseUrl(this.photoConfig.getUrl())
-//                .defaultHeader("My-Header", "Foo") TODO: Change this line to use authentication
+            .baseUrl(photoConfig.getUrl())
+                .defaultHeader("X-Api-Key", photoConfig.getApiKey())
             .build();
     }
 

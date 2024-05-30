@@ -6,10 +6,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "photo")
+@ConfigurationProperties(prefix = "auth")
 @Getter
 @Setter
-public class PhotoConfig {
-    private String url;
+public class AuthConfig {
     private String apiKey;
 }

@@ -26,4 +26,5 @@ public interface InventoryRepository extends JpaRepository<Inventory, UUID> {
             "LIMIT 1"
     )
     String findLastInventoryType(UUID propertyId);
+
 }

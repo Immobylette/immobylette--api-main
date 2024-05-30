@@ -4,16 +4,10 @@ import com.immobylette.api.main.domain.InventoryStateLabel;
 import com.immobylette.api.main.domain.SignatureTypeEnum;
 import com.immobylette.api.main.domain.StateTypeEnum;
 import com.immobylette.api.main.domain.WallTypeEnum;
-import com.immobylette.api.main.dto.ElementSummaryDto;
-import com.immobylette.api.main.dto.RoomDto;
-import com.immobylette.api.main.entity.Inventory;
-import com.immobylette.api.main.entity.Property;
-import com.immobylette.api.main.entity.Room;
-import com.immobylette.api.main.entity.ThirdParty;
-import com.immobylette.api.main.entity.Element;
-import com.immobylette.api.main.entity.Lease;
-import com.immobylette.api.main.entity.SignatureInventoryThirdParty;
-import com.immobylette.api.main.exception.InventoryNotFoundException;
+import com.immobylette.api.main.dto.*;
+import com.immobylette.api.main.entity.*;
+import com.immobylette.api.main.exception.*;
+import com.immobylette.api.main.mapper.ElementMapper;
 import com.immobylette.api.main.mapper.ElementSummaryMapper;
 import com.immobylette.api.main.mapper.RoomMapper;
 import com.immobylette.api.main.repository.ThirdPartyRepository;
@@ -26,9 +20,11 @@ import com.immobylette.api.main.repository.SignatureInventoryThirdPartyRepositor
 import com.immobylette.api.main.repository.ElementRepository;
 import com.immobylette.api.main.repository.StepRepository;
 import com.immobylette.api.main.entity.enums.InventoryTypeLabel;
-import com.immobylette.api.main.exception.AgentNotFoundException;
-import com.immobylette.api.main.exception.PropertyNotAssociatedWithAnyLeaseException;
+import com.immobylette.api.main.resource.FolderResource;
+import com.immobylette.api.main.resource.PhotoResource;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -57,6 +53,13 @@ public class InventoryService {
 
     private final ElementSummaryMapper elementSummaryMapper;
 
+    private final ElementMapper elementMapper;
+
+    private final PhotoResource photoResource;
+
+    private final FolderResource folderResource;
+
+
     public UUID createInventory(UUID propertyId, UUID agentId)  throws PropertyNotAssociatedWithAnyLeaseException, AgentNotFoundException {
         Inventory inventory = new Inventory();
 
@@ -82,17 +85,24 @@ public class InventoryService {
     }
 
 
-    public RoomDto getCurrentRoom(UUID id) throws InventoryNotFoundException {
+    public RoomDto getCurrentRoom(UUID id) throws InventoryNotFoundException, RoomNotFoundException {
+        inventoryRepository.findById(id).orElseThrow(()
+                -> new InventoryNotFoundException(id));
+
         Property property = propertyRepository.findByInventoryId(id);
-        Room room = roomRepository.findCurrentRoomByInventoryIdAndRoomId(id, property.getId()).orElseThrow(() -> new InventoryNotFoundException(id));
+        Room room = roomRepository.findCurrentRoomByInventoryIdAndPropertyId(id, property.getId()).orElseThrow(()
+                -> new RoomNotFoundException(id, property.getId()));
 
         return roomMapper.fromRoom(room);
     }
 
-    public List<ElementSummaryDto> getElements(UUID id) throws InventoryNotFoundException {
+    public List<ElementSummaryDto> getElements(UUID id) throws InventoryNotFoundException, RoomNotFoundException {
+        inventoryRepository.findById(id).orElseThrow(()
+                -> new InventoryNotFoundException(id));
 
         Property property = propertyRepository.findByInventoryId(id);
-        Room room = roomRepository.findCurrentRoomByInventoryIdAndRoomId(id, property.getId()).orElseThrow(() -> new InventoryNotFoundException(id));
+        Room room = roomRepository.findCurrentRoomByInventoryIdAndPropertyId(id, property.getId()).orElseThrow(()
+                -> new RoomNotFoundException(id, property.getId()));
 
         List<String> walls = Arrays.stream(WallTypeEnum.values()).map(WallTypeEnum::getName).toList();
         List<Element> elements = elementRepository.findElementsByRoomId(room.getId(), walls);
@@ -101,9 +111,13 @@ public class InventoryService {
         return populateElementsSummariesDto(elementSummaryDtos, id);
     }
 
-    public List<ElementSummaryDto> getWalls(UUID id) throws InventoryNotFoundException {
+    public List<ElementSummaryDto> getWalls(UUID id) throws InventoryNotFoundException, RoomNotFoundException {
+        inventoryRepository.findById(id).orElseThrow(()
+                -> new InventoryNotFoundException(id));
+
         Property property = propertyRepository.findByInventoryId(id);
-        Room room = roomRepository.findCurrentRoomByInventoryIdAndRoomId(id, property.getId()).orElseThrow(() -> new InventoryNotFoundException(id));
+        Room room = roomRepository.findCurrentRoomByInventoryIdAndPropertyId(id, property.getId()).orElseThrow(()
+                -> new RoomNotFoundException(id, property.getId()));
 
         List<String> walls = Arrays.stream(WallTypeEnum.values()).map(WallTypeEnum::getName).toList();
         List<Element> elements = elementRepository.findWallsByRoomId(room.getId(), walls);
@@ -130,6 +144,31 @@ public class InventoryService {
         }).toList();
         return elementSummaryDtos;
     }
+
+    public ElementDto getElement(UUID inventoryId, UUID elementId)
+            throws ElementNotFoundException, FolderNotFoundException, InventoryNotFoundException,
+            StepNotFoundException {
+
+        inventoryRepository.findById(inventoryId).orElseThrow(()
+                -> new InventoryNotFoundException(inventoryId));
+
+        Element element = elementRepository.findByInventoryId(elementId, inventoryId).orElseThrow(()
+                -> new ElementNotFoundException(elementId, inventoryId));
+
+        Pageable pageable = PageRequest.of(0, 2);
+        List<Step> steps = stepRepository.findStepsByElementId(elementId, pageable);
+
+        FolderDto folderPreviousPhoto = null;
+        if(steps.size() > 1){
+            folderPreviousPhoto = folderResource.getFolder(steps.get(1).getRefPhotosFolder());
+        }
+
+        PhotoDto photo = photoResource.getPhoto(element.getPhoto());
+        FolderDto folderBasePhoto = folderResource.getFolder(element.getPhotoFolder());
+
+        return elementMapper.fromElement(element, photo, folderBasePhoto, folderPreviousPhoto);
+    }
+
 
     public void sign(UUID id, SignatureTypeEnum type) throws InventoryNotFoundException {
         Inventory inventory = inventoryRepository.findById(id).orElseThrow(() -> new InventoryNotFoundException(id));

@@ -17,5 +17,5 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
         "ORDER BY r.numberOrder " +
         "LIMIT 1"
     )
-    Optional<Room> findCurrentRoomByInventoryIdAndRoomId(UUID inventoryId, UUID propertyId);
+    Optional<Room> findCurrentRoomByInventoryIdAndPropertyId(UUID inventoryId, UUID propertyId);
 }

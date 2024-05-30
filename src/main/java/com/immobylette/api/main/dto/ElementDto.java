@@ -38,6 +38,4 @@ public class ElementDto {
     @JsonProperty("previous_photos")
     private List<String> previousPhotos;
 
-    @NotNull
-    private StepDto step;
 }

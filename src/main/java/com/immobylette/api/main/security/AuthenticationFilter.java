@@ -4,6 +4,7 @@ import com.immobylette.api.main.config.AuthConfig;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Base64
 import lombok.AllArgsConstructor;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         logger.error(apiKey.isEmpty());
         logger.error(apiKey == authConfig.getApiKey());
         logger.error(apiKey.equals(authConfig.getApiKey()));
+        logger.error(Base64.getEncoder().encodeToString(apiKey.getBytes()));
+        logger.error(Base64.getEncoder().encodeToString(authConfig.getApiKey().getBytes()));
 
         if (apiKey == null || apiKey.isEmpty() || apiKey != authConfig.getApiKey()){
             logger.error("Unauthorized");

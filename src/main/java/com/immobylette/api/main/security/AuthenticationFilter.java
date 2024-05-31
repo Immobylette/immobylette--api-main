@@ -4,7 +4,7 @@ import com.immobylette.api.main.config.AuthConfig;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Base64
+import java.util.Base64;
 import lombok.AllArgsConstructor;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;

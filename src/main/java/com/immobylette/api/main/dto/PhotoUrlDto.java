@@ -5,15 +5,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
-
 @Builder
 @Setter
 @Getter
 public class PhotoUrlDto {
-    @NotNull
-    private UUID id;
-
     @NotNull
     private String description;
 

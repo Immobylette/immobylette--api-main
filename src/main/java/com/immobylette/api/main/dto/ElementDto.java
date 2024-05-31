@@ -32,10 +32,10 @@ public class ElementDto {
 
     @NotNull
     @JsonProperty("base_photos")
-    private List<String> basePhotos;
+    private List<PhotoUrlDto> basePhotos;
 
     @NotNull
     @JsonProperty("previous_photos")
-    private List<String> previousPhotos;
+    private List<PhotoUrlDto> previousPhotos;
 
 }

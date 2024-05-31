@@ -27,7 +27,7 @@ public class ThirdPartyService {
     public List<ThirdPartyDto> getAgents() throws PhotoNotFoundException, GCPStorageException {
         List<ThirdParty> agents = thirdPartyRepository.findByThirdPartyTypeLabel(ThirdPartyTypeEnum.AGENT.getName());
         return agents.stream().map(agent -> {
-            PhotoUrlDto photo = photoResource.getPhoto(agent.getRefPhoto());
+            PhotoUrlDto photo = photoResource.getPhoto(agent.getRefPhoto().toString());
             return thirdPartyMapper.fromThirdParty(agent, photo);
         }).toList();
     }

@@ -13,12 +13,18 @@ public interface ElementSummaryMapper {
     @Mappings({
             @Mapping(target = "type", source = "element.elementType", qualifiedByName = "ElementType"),
             @Mapping(target = "nbBasePhotos", source = "nbBasePhotos"),
-            @Mapping(target = "nbPreviousPhotos", source = "nbPreviousPhotos")
+            @Mapping(target = "nbPreviousPhotos", source = "nbPreviousPhotos"),
+            @Mapping(target = "photo", source="element", qualifiedByName = "Photo")
     })
     ElementSummaryDto fromElement(Element element, int nbBasePhotos, int nbPreviousPhotos);
 
     @Named("ElementType")
     static String fromElementType(ElementType elementType) {
         return elementType.getLabel();
+    }
+
+    @Named("Photo")
+    static String fromPhoto(Element element) {
+        return String.format("%s/%s", element.getPhotoFolder().toString(), element.getPhoto().toString());
     }
 }

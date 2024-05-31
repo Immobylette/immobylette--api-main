@@ -40,7 +40,7 @@ public class PropertyService {
         return properties.map(propertyDistance -> {
             Property property = propertyDistance.getProperty();
             Double distance = propertyDistance.getDistance();
-            PhotoUrlDto photo = photoResource.getPhoto(property.getPhoto());
+            PhotoUrlDto photo = photoResource.getPhoto(property.getPhoto().toString());
 
             ThirdParty currentTenant = thirdPartyRepository.findCurrentTenantByPropertyId(property.getId());
             UUID currentInventory = inventoryRepository.findCurrentInventoryByPropertyId(property.getId());
@@ -52,7 +52,7 @@ public class PropertyService {
         Property property = propertyRepository.findById(id).orElseThrow(() -> new PropertyNotFoundException(id));
         ThirdParty currentTenant = thirdPartyRepository.findCurrentTenantByPropertyId(id);
         UUID currentInventory = inventoryRepository.findCurrentInventoryByPropertyId(id);
-        PhotoUrlDto photo = photoResource.getPhoto(property.getPhoto());
+        PhotoUrlDto photo = photoResource.getPhoto(property.getPhoto().toString());
 
         return propertyMapper.fromProperty(property, currentTenant, photo, currentInventory);
     }

@@ -22,7 +22,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         String apiKey = request.getHeader("X-Api-Key");
         logger.error(String.format("Header : %s", request));
         logger.error(String.format(String.format("given key and exepct : %s / %s", apiKey, authConfig.getApiKey())));
-        if (apiKey == null || apiKey.isEmpty() || !apiKey.equals(authConfig.getApiKey())){
+        if (apiKey == null || apiKey.isEmpty() || apiKey != authConfig.getApiKey()){
             logger.error("Unauthorized");
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Access Denied");
             return;

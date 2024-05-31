@@ -4,9 +4,24 @@ import com.immobylette.api.main.domain.InventoryStateLabel;
 import com.immobylette.api.main.domain.SignatureTypeEnum;
 import com.immobylette.api.main.domain.StateTypeEnum;
 import com.immobylette.api.main.domain.WallTypeEnum;
-import com.immobylette.api.main.dto.*;
-import com.immobylette.api.main.entity.*;
-import com.immobylette.api.main.exception.*;
+import com.immobylette.api.main.dto.ElementDto;
+import com.immobylette.api.main.dto.ElementSummaryDto;
+import com.immobylette.api.main.dto.FolderDto;
+import com.immobylette.api.main.dto.PhotoUrlDto;
+import com.immobylette.api.main.dto.RoomDto;
+import com.immobylette.api.main.entity.Inventory;
+import com.immobylette.api.main.entity.Property;
+import com.immobylette.api.main.entity.Room;
+import com.immobylette.api.main.entity.Step;
+import com.immobylette.api.main.entity.ThirdParty;
+import com.immobylette.api.main.entity.Element;
+import com.immobylette.api.main.entity.Lease;
+import com.immobylette.api.main.entity.SignatureInventoryThirdParty;
+import com.immobylette.api.main.exception.ElementNotFoundException;
+import com.immobylette.api.main.exception.FolderNotFoundException;
+import com.immobylette.api.main.exception.InventoryNotFoundException;
+import com.immobylette.api.main.exception.RoomNotFoundException;
+import com.immobylette.api.main.exception.StepNotFoundException;
 import com.immobylette.api.main.mapper.ElementMapper;
 import com.immobylette.api.main.mapper.ElementSummaryMapper;
 import com.immobylette.api.main.mapper.RoomMapper;
@@ -20,6 +35,8 @@ import com.immobylette.api.main.repository.SignatureInventoryThirdPartyRepositor
 import com.immobylette.api.main.repository.ElementRepository;
 import com.immobylette.api.main.repository.StepRepository;
 import com.immobylette.api.main.entity.enums.InventoryTypeLabel;
+import com.immobylette.api.main.exception.AgentNotFoundException;
+import com.immobylette.api.main.exception.PropertyNotAssociatedWithAnyLeaseException;
 import com.immobylette.api.main.resource.FolderResource;
 import com.immobylette.api.main.resource.PhotoResource;
 import lombok.AllArgsConstructor;
@@ -163,7 +180,7 @@ public class InventoryService {
             folderPreviousPhoto = folderResource.getFolder(steps.get(1).getRefPhotosFolder());
         }
 
-        PhotoDto photo = photoResource.getPhoto(element.getPhoto());
+        PhotoUrlDto photo = photoResource.getPhoto(element.getPhoto());
         FolderDto folderBasePhoto = folderResource.getFolder(element.getPhotoFolder());
 
         return elementMapper.fromElement(element, photo, folderBasePhoto, folderPreviousPhoto);

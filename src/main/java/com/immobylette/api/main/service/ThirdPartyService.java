@@ -8,7 +8,7 @@ import com.immobylette.api.main.exception.PhotoNotFoundException;
 import com.immobylette.api.main.mapper.ThirdPartyMapper;
 import com.immobylette.api.main.repository.ThirdPartyRepository;
 import com.immobylette.api.main.resource.PhotoResource;
-import com.immobylette.api.main.dto.PhotoDto;
+import com.immobylette.api.main.dto.PhotoUrlDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class ThirdPartyService {
     public List<ThirdPartyDto> getAgents() throws PhotoNotFoundException, GCPStorageException {
         List<ThirdParty> agents = thirdPartyRepository.findByThirdPartyTypeLabel(ThirdPartyTypeEnum.AGENT.getName());
         return agents.stream().map(agent -> {
-            PhotoDto photo = photoResource.getPhoto(agent.getRefPhoto());
+            PhotoUrlDto photo = photoResource.getPhoto(agent.getRefPhoto());
             return thirdPartyMapper.fromThirdParty(agent, photo);
         }).toList();
     }

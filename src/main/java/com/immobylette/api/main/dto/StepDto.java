@@ -1,24 +1,27 @@
 package com.immobylette.api.main.dto;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.immobylette.api.main.domain.Photo;
+import com.immobylette.api.main.domain.StateTypeEnum;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
+@Builder
 @Getter
-@Setter
-public class StepReceivedDto {
+public class StepDto {
+
     private String description;
 
     @JsonProperty("error_description")
     private String errorDescription;
 
     @NotNull
-    private String state;
+    private StateTypeEnum state;
 
     @NotNull
-    private List<PhotoDto> photos;
+    @JsonProperty("photos_descriptions")
+    private List<String> photosDescriptions;
 }

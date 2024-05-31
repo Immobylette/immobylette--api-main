@@ -1,6 +1,6 @@
 package com.immobylette.api.main.mapper;
 
-import com.immobylette.api.main.dto.PhotoDto;
+import com.immobylette.api.main.dto.PhotoUrlDto;
 import com.immobylette.api.main.dto.PropertyDto;
 import com.immobylette.api.main.entity.*;
 import org.mapstruct.*;
@@ -19,7 +19,7 @@ public interface PropertyMapper {
             @Mapping(target = "currentInventory", source = "currentInventory"),
             @Mapping(target = "photo", source = "photo.url"),
     })
-    PropertyDto fromProperty(Property property, ThirdParty currentTenant, PhotoDto photo, UUID currentInventory);
+    PropertyDto fromProperty(Property property, ThirdParty currentTenant, PhotoUrlDto photo, UUID currentInventory);
 
     @Named("hotWaterType")
     static String hotWaterType(HotWaterType hotWaterType) {

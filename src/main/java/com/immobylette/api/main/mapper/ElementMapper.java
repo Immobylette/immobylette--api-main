@@ -17,14 +17,14 @@ public interface ElementMapper {
     @Mappings({
             @Mapping(target = "id", source = "element.id"),
             @Mapping(target = "description", source = "element.description"),
-            @Mapping(target = "photo", source = "photoDto", qualifiedByName = "photoUrl"),
+            @Mapping(target = "photo", source = "photoUrlDto", qualifiedByName = "photoUrl"),
             @Mapping(target = "basePhotos", source = "folderBasePhotos", qualifiedByName = "photosBaseFolder"),
             @Mapping(target = "previousPhotos", source = "folderPreviousPhotos", qualifiedByName = "photosPreviousFolder"),
             @Mapping(target = "type", source = "element.elementType", qualifiedByName = "elementType")
     })
     ElementDto fromElement(
             Element element,
-            PhotoDto photoDto,
+            PhotoUrlDto photoUrlDto,
             FolderDto folderBasePhotos,
             FolderDto folderPreviousPhotos
             );
@@ -32,7 +32,7 @@ public interface ElementMapper {
     @Named("photosBaseFolder")
     static List<String> photosBaseFolder(FolderDto folderBasePhotos) {
         return folderBasePhotos.getPhotos().stream()
-                .map(PhotoDto::getUrl)
+                .map(PhotoUrlDto::getUrl)
                 .collect(Collectors.toList());
     }
 
@@ -40,7 +40,7 @@ public interface ElementMapper {
     static List<String> photosPreviousFolder(FolderDto folderPreviousPhotos) {
         if(folderPreviousPhotos != null){
             return folderPreviousPhotos.getPhotos().stream()
-                    .map(PhotoDto::getUrl)
+                    .map(PhotoUrlDto::getUrl)
                     .collect(Collectors.toList());
         }
         else{
@@ -54,8 +54,8 @@ public interface ElementMapper {
     }
 
     @Named("photoUrl")
-    static String photoUrl(PhotoDto photoDto) {
-        return photoDto.getUrl();
+    static String photoUrl(PhotoUrlDto photoUrlDto) {
+        return photoUrlDto.getUrl();
     }
 
 }

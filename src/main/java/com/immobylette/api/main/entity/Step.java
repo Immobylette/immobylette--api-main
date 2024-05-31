@@ -17,8 +17,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Step {
     @Id
+    @GeneratedValue()
     @Column(name = "id")
-    private UUID id;
+    private UUID id = null;
 
     @Column(name = "description", nullable = false)
     private String description;

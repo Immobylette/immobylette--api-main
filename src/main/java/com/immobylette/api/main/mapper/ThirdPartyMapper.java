@@ -1,7 +1,7 @@
 package com.immobylette.api.main.mapper;
 
 
-import com.immobylette.api.main.dto.PhotoDto;
+import com.immobylette.api.main.dto.PhotoUrlDto;
 import com.immobylette.api.main.dto.ThirdPartyDto;
 import com.immobylette.api.main.entity.ThirdParty;
 import org.mapstruct.Mapper;
@@ -15,7 +15,7 @@ public interface ThirdPartyMapper {
         @Mapping(target = "id", source = "thirdParty.id"),
         @Mapping(target = "photo", source = "photo.url")
     })
-    ThirdPartyDto fromThirdParty(ThirdParty thirdParty, PhotoDto photo);
+    ThirdPartyDto fromThirdParty(ThirdParty thirdParty, PhotoUrlDto photo);
 
 }
 

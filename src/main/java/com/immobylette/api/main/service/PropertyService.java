@@ -1,7 +1,7 @@
 package com.immobylette.api.main.service;
 
 import com.immobylette.api.main.domain.PropertyDistance;
-import com.immobylette.api.main.dto.PhotoDto;
+import com.immobylette.api.main.dto.PhotoUrlDto;
 import com.immobylette.api.main.dto.PropertyDto;
 import com.immobylette.api.main.dto.PropertySummaryDto;
 import com.immobylette.api.main.entity.Property;
@@ -40,7 +40,7 @@ public class PropertyService {
         return properties.map(propertyDistance -> {
             Property property = propertyDistance.getProperty();
             Double distance = propertyDistance.getDistance();
-            PhotoDto photo = photoResource.getPhoto(property.getPhoto());
+            PhotoUrlDto photo = photoResource.getPhoto(property.getPhoto());
 
             ThirdParty currentTenant = thirdPartyRepository.findCurrentTenantByPropertyId(property.getId());
             UUID currentInventory = inventoryRepository.findCurrentInventoryByPropertyId(property.getId());
@@ -52,7 +52,7 @@ public class PropertyService {
         Property property = propertyRepository.findById(id).orElseThrow(() -> new PropertyNotFoundException(id));
         ThirdParty currentTenant = thirdPartyRepository.findCurrentTenantByPropertyId(id);
         UUID currentInventory = inventoryRepository.findCurrentInventoryByPropertyId(id);
-        PhotoDto photo = photoResource.getPhoto(property.getPhoto());
+        PhotoUrlDto photo = photoResource.getPhoto(property.getPhoto());
 
         return propertyMapper.fromProperty(property, currentTenant, photo, currentInventory);
     }

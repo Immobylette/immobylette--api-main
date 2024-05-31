@@ -1,22 +1,13 @@
 package com.immobylette.api.main.dto;
 
-import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.UUID;
-
-@Builder
-@Setter
-@Getter
+@Data
+@AllArgsConstructor
 public class PhotoDto {
-    @NotNull
-    private UUID id;
+    String description;
 
-    @NotNull
-    private String description;
-
-    @NotNull
-    private String url;
+    MultipartFile file;
 }

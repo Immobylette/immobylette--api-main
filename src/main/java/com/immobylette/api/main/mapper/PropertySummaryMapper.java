@@ -1,6 +1,6 @@
 package com.immobylette.api.main.mapper;
 
-import com.immobylette.api.main.dto.PhotoDto;
+import com.immobylette.api.main.dto.PhotoUrlDto;
 import com.immobylette.api.main.dto.PropertySummaryDto;
 import com.immobylette.api.main.entity.*;
 import org.mapstruct.Mapper;
@@ -20,7 +20,7 @@ public interface PropertySummaryMapper {
             @Mapping(target = "distance", source = "distance"),
             @Mapping(target = "photo", source = "photo.url"),
     })
-    PropertySummaryDto fromProperty(Property property, ThirdParty currentTenant, PhotoDto photo, boolean currentInventory, double distance);
+    PropertySummaryDto fromProperty(Property property, ThirdParty currentTenant, PhotoUrlDto photo, boolean currentInventory, double distance);
 
     @Named("propertyType")
     static String propertyType(PropertyType propertyType) {

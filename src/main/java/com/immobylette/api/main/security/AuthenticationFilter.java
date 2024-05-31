@@ -30,7 +30,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         logger.error(Base64.getEncoder().encodeToString(apiKey.getBytes()));
         logger.error(Base64.getEncoder().encodeToString(authConfig.getApiKey().getBytes()));
 
-        if (apiKey == null || apiKey.isEmpty() || apiKey != authConfig.getApiKey()){
+        if (apiKey.isEmpty() || apiKey.equals(authConfig.getApiKey())){
             logger.error("Unauthorized");
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Access Denied");
             return;

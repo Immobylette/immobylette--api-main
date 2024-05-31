@@ -20,6 +20,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String apiKey = request.getHeader("X-Api-Key");
+        logger.error(String.format("Header : %s", request));
         logger.error(String.format(String.format("given key and exepct : %s / %s", apiKey, authConfig.getApiKey())));
         if (apiKey == null || apiKey.isEmpty() || !apiKey.equals(authConfig.getApiKey())){
             logger.error("Unauthorized");

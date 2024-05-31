@@ -7,6 +7,9 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.Named;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface ElementMapper {
 
@@ -15,7 +18,7 @@ public interface ElementMapper {
             @Mapping(target = "description", source = "element.description"),
             @Mapping(target = "photo", source = "photoUrlDto", qualifiedByName = "photoUrl"),
             @Mapping(target = "basePhotos", source = "folderBasePhotos.photos"),
-            @Mapping(target = "previousPhotos", source = "folderPreviousPhotos.photos"),
+            @Mapping(target = "previousPhotos", source = "folderPreviousPhotos", qualifiedByName = "photosPreviousFolder"),
             @Mapping(target = "type", source = "element.elementType", qualifiedByName = "elementType")
     })
     ElementDto fromElement(
@@ -24,6 +27,16 @@ public interface ElementMapper {
             FolderDto folderBasePhotos,
             FolderDto folderPreviousPhotos
             );
+
+    @Named("photosPreviousFolder")
+    static List<PhotoUrlDto> photosPreviousFolder(FolderDto folderPreviousPhotos) {
+        if(folderPreviousPhotos != null){
+            return folderPreviousPhotos.getPhotos();
+        }
+        else{
+            return new ArrayList<>();
+        }
+    }
 
     @Named("elementType")
     static String elementType(ElementType elementType) {

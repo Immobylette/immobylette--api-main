@@ -9,7 +9,6 @@ import org.mapstruct.Named;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface ElementMapper {
@@ -18,7 +17,7 @@ public interface ElementMapper {
             @Mapping(target = "id", source = "element.id"),
             @Mapping(target = "description", source = "element.description"),
             @Mapping(target = "photo", source = "photoUrlDto", qualifiedByName = "photoUrl"),
-            @Mapping(target = "basePhotos", source = "folderBasePhotos", qualifiedByName = "photosBaseFolder"),
+            @Mapping(target = "basePhotos", source = "folderBasePhotos.photos"),
             @Mapping(target = "previousPhotos", source = "folderPreviousPhotos", qualifiedByName = "photosPreviousFolder"),
             @Mapping(target = "type", source = "element.elementType", qualifiedByName = "elementType")
     })
@@ -29,19 +28,10 @@ public interface ElementMapper {
             FolderDto folderPreviousPhotos
             );
 
-    @Named("photosBaseFolder")
-    static List<String> photosBaseFolder(FolderDto folderBasePhotos) {
-        return folderBasePhotos.getPhotos().stream()
-                .map(PhotoUrlDto::getUrl)
-                .collect(Collectors.toList());
-    }
-
     @Named("photosPreviousFolder")
-    static List<String> photosPreviousFolder(FolderDto folderPreviousPhotos) {
+    static List<PhotoUrlDto> photosPreviousFolder(FolderDto folderPreviousPhotos) {
         if(folderPreviousPhotos != null){
-            return folderPreviousPhotos.getPhotos().stream()
-                    .map(PhotoUrlDto::getUrl)
-                    .collect(Collectors.toList());
+            return folderPreviousPhotos.getPhotos();
         }
         else{
             return new ArrayList<>();

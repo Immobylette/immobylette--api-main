@@ -18,5 +18,6 @@ public class FolderSummaryDto {
 
     @NotNull
     @JsonProperty("nb_photos")
-    private Integer nbPhotos;
+    private int nbPhotos;
+
 }

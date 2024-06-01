@@ -68,7 +68,8 @@ public class InventoryController {
     }
 
     @GetMapping("/inventories/{id}/summary")
-    public InventorySummaryDto getInventorySummary(@PathVariable UUID id) throws InventoryNotFoundException, InventoryNotCompletedException {
+    public InventorySummaryDto getInventorySummary(@PathVariable UUID id)
+            throws InventoryNotFoundException, InventoryNotCompletedException, FolderNotFoundException, GCPStorageException {
         return inventoryService.getSummary(id);
     }
 }

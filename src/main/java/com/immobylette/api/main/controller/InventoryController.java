@@ -38,13 +38,13 @@ public class InventoryController {
 
     @GetMapping("/inventories/{id}/elements")
     public List<ElementSummaryDto> getElements(@PathVariable UUID id)
-            throws InventoryNotFoundException , RoomNotFoundException{
+            throws InventoryNotFoundException , RoomNotFoundException, FolderNotFoundException, GCPStorageException{
         return inventoryService.getElements(id);
     }
 
     @GetMapping("/inventories/{id}/walls")
     public List<ElementSummaryDto> getWalls(@PathVariable UUID id)
-            throws InventoryNotFoundException, RoomNotFoundException {
+            throws InventoryNotFoundException, RoomNotFoundException, FolderNotFoundException, GCPStorageException {
         return inventoryService.getWalls(id);
     }
 

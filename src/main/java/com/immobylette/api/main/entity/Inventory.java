@@ -40,4 +40,7 @@ public class Inventory {
 
     @OneToMany(mappedBy = "inventory")
     private List<SignatureInventoryThirdParty> signatures;
+
+    @OneToMany(mappedBy = "inventory")
+    private List<Step> steps;
 }

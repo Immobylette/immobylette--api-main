@@ -64,5 +64,6 @@ public class Property {
     @OneToMany(mappedBy = "property")
     private List<Lease> leases;
 
-
+    @OneToMany(mappedBy = "property")
+    private List<Room> rooms;
 }

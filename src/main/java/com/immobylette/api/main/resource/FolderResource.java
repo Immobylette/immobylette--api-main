@@ -1,6 +1,7 @@
 package com.immobylette.api.main.resource;
 
 import com.immobylette.api.main.dto.FolderDto;
+import com.immobylette.api.main.dto.FolderSummaryDto;
 import com.immobylette.api.main.exception.FolderNotFoundException;
 import com.immobylette.api.main.exception.GCPStorageException;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,22 @@ public class FolderResource {
                     }
                 })
                 .toEntity(FolderDto.class);
+
+        return result.getBody();
+    }
+
+    public FolderSummaryDto getFolderSummary(UUID id) throws FolderNotFoundException, GCPStorageException {
+        ResponseEntity<FolderSummaryDto> result = restClient.get()
+                .uri("/api/v1/folders/{id}", id)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
+                    if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
+                        throw new FolderNotFoundException(id);
+                    } else if (response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
+                        throw new GCPStorageException("gcp error");
+                    }
+                })
+                .toEntity(FolderSummaryDto.class);
 
         return result.getBody();
     }

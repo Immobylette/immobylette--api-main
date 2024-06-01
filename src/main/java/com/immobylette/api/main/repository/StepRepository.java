@@ -29,4 +29,6 @@ public interface StepRepository extends JpaRepository<Step, UUID> {
             "ORDER BY i.inventoryDate DESC ")
     List<Step> findStepsByElementId(UUID elementId, Pageable pageable);
 
+    int countByInventoryId(UUID inventoryId);
+
 }

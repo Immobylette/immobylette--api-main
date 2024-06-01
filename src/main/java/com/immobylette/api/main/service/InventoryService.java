@@ -4,11 +4,7 @@ import com.immobylette.api.main.domain.InventoryStateLabel;
 import com.immobylette.api.main.domain.SignatureTypeEnum;
 import com.immobylette.api.main.domain.StateTypeEnum;
 import com.immobylette.api.main.domain.WallTypeEnum;
-import com.immobylette.api.main.dto.ElementDto;
-import com.immobylette.api.main.dto.ElementSummaryDto;
-import com.immobylette.api.main.dto.FolderDto;
-import com.immobylette.api.main.dto.PhotoUrlDto;
-import com.immobylette.api.main.dto.RoomDto;
+import com.immobylette.api.main.dto.*;
 import com.immobylette.api.main.entity.Inventory;
 import com.immobylette.api.main.entity.Property;
 import com.immobylette.api.main.entity.Room;
@@ -17,13 +13,10 @@ import com.immobylette.api.main.entity.ThirdParty;
 import com.immobylette.api.main.entity.Element;
 import com.immobylette.api.main.entity.Lease;
 import com.immobylette.api.main.entity.SignatureInventoryThirdParty;
-import com.immobylette.api.main.exception.ElementNotFoundException;
-import com.immobylette.api.main.exception.FolderNotFoundException;
-import com.immobylette.api.main.exception.InventoryNotFoundException;
-import com.immobylette.api.main.exception.RoomNotFoundException;
-import com.immobylette.api.main.exception.StepNotFoundException;
+import com.immobylette.api.main.exception.*;
 import com.immobylette.api.main.mapper.ElementMapper;
 import com.immobylette.api.main.mapper.ElementSummaryMapper;
+import com.immobylette.api.main.mapper.InventorySummaryMapper;
 import com.immobylette.api.main.mapper.RoomMapper;
 import com.immobylette.api.main.repository.ThirdPartyRepository;
 import com.immobylette.api.main.repository.InventoryRepository;
@@ -75,6 +68,8 @@ public class InventoryService {
     private final PhotoResource photoResource;
 
     private final FolderResource folderResource;
+
+    private final InventorySummaryMapper inventorySummaryMapper;
 
 
     public UUID createInventory(UUID propertyId, UUID agentId)  throws PropertyNotAssociatedWithAnyLeaseException, AgentNotFoundException {
@@ -206,5 +201,25 @@ public class InventoryService {
         }
 
         signatureInventoryThirdPartyRepository.save(signatureBuilder.build());
+    }
+
+    public InventorySummaryDto getSummary(UUID id) throws InventoryNotFoundException, InventoryNotCompletedException, FolderNotFoundException, GCPStorageException {
+        Inventory inventory = inventoryRepository.findById(id).orElseThrow(() -> new InventoryNotFoundException(id));
+
+        if (elementRepository.countByInventoryId(id) != stepRepository.countByInventoryId(id))
+            throw new InventoryNotCompletedException(id);
+
+        int nbRooms = inventory.getLease().getProperty().getNbRooms();
+        Date date = new Date();
+        int nbPhotos = inventory
+                .getSteps()
+                .stream()
+                .reduce(
+                    0,
+                    (prev, curr) -> prev + folderResource.getFolderSummary(curr.getRefPhotosFolder()).getNbPhotos(),
+                    Integer::sum
+                );
+
+        return inventorySummaryMapper.fromInventorySummary(nbRooms, nbPhotos, date);
     }
 }

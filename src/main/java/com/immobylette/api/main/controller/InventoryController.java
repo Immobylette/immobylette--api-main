@@ -1,9 +1,6 @@
 package com.immobylette.api.main.controller;
 
-import com.immobylette.api.main.dto.ElementDto;
-import com.immobylette.api.main.dto.ElementSummaryDto;
-import com.immobylette.api.main.dto.RoomDto;
-import com.immobylette.api.main.dto.StepDto;
+import com.immobylette.api.main.dto.*;
 import com.immobylette.api.main.exception.ElementNotFoundException;
 import com.immobylette.api.main.exception.GCPStorageException;
 import com.immobylette.api.main.dto.SignatureDto;
@@ -68,5 +65,10 @@ public class InventoryController {
                         @Valid @RequestPart("step") StepDto step
     ) throws InventoryNotFoundException, ElementNotFoundException, GCPStorageException {
         stepService.createStep(id, idElement, step, photos);
+    }
+
+    @GetMapping("/inventories/{id}/summary")
+    public InventorySummaryDto getInventorySummary(@PathVariable UUID id) throws InventoryNotFoundException, InventoryNotCompletedException {
+        return inventoryService.getSummary(id);
     }
 }

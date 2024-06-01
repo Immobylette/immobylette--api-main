@@ -28,18 +28,18 @@ public class PhotoResource {
     private final RestTemplate restTemplate;
 
     public PhotoUrlDto getPhoto(String id) throws PhotoNotFoundException, GCPStorageException {
-        ResponseEntity<PhotoDto> result = null;
-            result = restClient.get()
-                    .uri(String.format("api/v1/photos/%s", id))
-                    .retrieve()
-                    .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
-                        if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
-                            throw new PhotoNotFoundException(id);
-                        } else if (response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
-                            throw new GCPStorageException("gcp error");
-                        }
-                    })
-                    .toEntity(PhotoUrlDto.class);
+        ResponseEntity<PhotoUrlDto> result = null;
+        result = restClient.get()
+                .uri(String.format("api/v1/photos/%s", id))
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
+                    if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
+                        throw new PhotoNotFoundException(id);
+                    } else if (response.getStatusCode() == HttpStatus.INTERNAL_SERVER_ERROR) {
+                        throw new GCPStorageException("gcp error");
+                    }
+                })
+                .toEntity(PhotoUrlDto.class);
 
         return result.getBody();
     }

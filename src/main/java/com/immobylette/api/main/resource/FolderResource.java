@@ -33,6 +33,7 @@ public class FolderResource {
 
         return result.getBody();
     }
+
     public FolderSummaryDto getFolderSummary(UUID id) throws FolderNotFoundException, GCPStorageException {
         ResponseEntity<FolderSummaryDto> result = restClient.get()
                 .uri("/api/v1/folders/{id}", id)

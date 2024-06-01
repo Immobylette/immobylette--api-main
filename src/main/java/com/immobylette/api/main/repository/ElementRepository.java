@@ -34,4 +34,15 @@ public interface ElementRepository extends JpaRepository<Element, UUID> {
             "AND i.id = :inventoryId ")
     Optional<Element> findByInventoryId(UUID elementId, UUID inventoryId);
 
+    @Query(
+            "SELECT COUNT(*)" +
+            "FROM Inventory i " +
+            "JOIN i.lease l " +
+            "JOIN l.property p " +
+            "JOIN p.rooms r " +
+            "JOIN r.elements e " +
+            "WHERE i.id = :inventoryId "
+    )
+    int countByInventoryId(UUID inventoryId);
+
 }

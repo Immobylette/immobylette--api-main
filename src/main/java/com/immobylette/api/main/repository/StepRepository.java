@@ -29,4 +29,6 @@ public interface StepRepository extends JpaRepository<Step, UUID> {
             "LIMIT 2")
     List<Step> findLastTwoStepsByElementId(UUID elementId);
 
+    int countByInventoryId(UUID inventoryId);
+
 }

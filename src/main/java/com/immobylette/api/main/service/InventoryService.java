@@ -19,7 +19,7 @@ import com.immobylette.api.main.exception.GCPStorageException;
 import com.immobylette.api.main.exception.InventoryNotFoundException;
 import com.immobylette.api.main.exception.RoomNotFoundException;
 import com.immobylette.api.main.exception.StepNotFoundException;
-import com.immobylette.api.main.exception.InventoryNotCompletedException
+import com.immobylette.api.main.exception.InventoryNotCompletedException;
 import com.immobylette.api.main.mapper.ElementMapper;
 import com.immobylette.api.main.mapper.ElementSummaryMapper;
 import com.immobylette.api.main.mapper.InventorySummaryMapper;

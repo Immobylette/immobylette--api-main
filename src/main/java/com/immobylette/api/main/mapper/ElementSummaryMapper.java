@@ -10,9 +10,12 @@ import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
 public interface ElementSummaryMapper {
-
-    @Mapping(target = "type", source = "elementType", qualifiedByName = "ElementType")
-    ElementSummaryDto fromElement(Element element);
+    @Mappings({
+            @Mapping(target = "type", source = "element.elementType", qualifiedByName = "ElementType"),
+            @Mapping(target = "nbBasePhotos", source = "nbBasePhotos"),
+            @Mapping(target = "nbPreviousPhotos", source = "nbPreviousPhotos")
+    })
+    ElementSummaryDto fromElement(Element element, int nbBasePhotos, int nbPreviousPhotos);
 
     @Named("ElementType")
     static String fromElementType(ElementType elementType) {

@@ -19,6 +19,7 @@ import com.immobylette.api.main.entity.Lease;
 import com.immobylette.api.main.entity.SignatureInventoryThirdParty;
 import com.immobylette.api.main.exception.ElementNotFoundException;
 import com.immobylette.api.main.exception.FolderNotFoundException;
+import com.immobylette.api.main.exception.GCPStorageException;
 import com.immobylette.api.main.exception.InventoryNotFoundException;
 import com.immobylette.api.main.exception.RoomNotFoundException;
 import com.immobylette.api.main.exception.StepNotFoundException;
@@ -40,8 +41,7 @@ import com.immobylette.api.main.exception.PropertyNotAssociatedWithAnyLeaseExcep
 import com.immobylette.api.main.resource.FolderResource;
 import com.immobylette.api.main.resource.PhotoResource;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -113,7 +113,7 @@ public class InventoryService {
         return roomMapper.fromRoom(room);
     }
 
-    public List<ElementSummaryDto> getElements(UUID id) throws InventoryNotFoundException, RoomNotFoundException {
+    public List<ElementSummaryDto> getElements(UUID id) throws InventoryNotFoundException, RoomNotFoundException, FolderNotFoundException, GCPStorageException {
         inventoryRepository.findById(id).orElseThrow(()
                 -> new InventoryNotFoundException(id));
 
@@ -123,12 +123,11 @@ public class InventoryService {
 
         List<String> walls = Arrays.stream(WallTypeEnum.values()).map(WallTypeEnum::getName).toList();
         List<Element> elements = elementRepository.findElementsByRoomId(room.getId(), walls);
-        List<ElementSummaryDto> elementSummaryDtos = elements.stream().map(elementSummaryMapper::fromElement).toList();
 
-        return populateElementsSummariesDto(elementSummaryDtos, id);
+        return generateElementsSummariesDto(elements, id);
     }
 
-    public List<ElementSummaryDto> getWalls(UUID id) throws InventoryNotFoundException, RoomNotFoundException {
+    public List<ElementSummaryDto> getWalls(UUID id) throws InventoryNotFoundException, RoomNotFoundException, FolderNotFoundException, GCPStorageException {
         inventoryRepository.findById(id).orElseThrow(()
                 -> new InventoryNotFoundException(id));
 
@@ -138,13 +137,23 @@ public class InventoryService {
 
         List<String> walls = Arrays.stream(WallTypeEnum.values()).map(WallTypeEnum::getName).toList();
         List<Element> elements = elementRepository.findWallsByRoomId(room.getId(), walls);
-        List<ElementSummaryDto> elementSummaryDtos = elements.stream().map(elementSummaryMapper::fromElement).toList();
 
-        return populateElementsSummariesDto(elementSummaryDtos, id);
+        return generateElementsSummariesDto(elements, id);
     }
 
-    private List<ElementSummaryDto> populateElementsSummariesDto(List<ElementSummaryDto> elementSummaryDtos, UUID currentInventoryId) {
-        elementSummaryDtos =  elementSummaryDtos.stream().peek(elementSummaryDto -> {
+    private List<ElementSummaryDto> generateElementsSummariesDto(List<Element> elements, UUID currentInventoryId) throws FolderNotFoundException, GCPStorageException {
+        return elements.stream().map(element -> {
+            int nbBasePhotos = folderResource.getFolderSummary(element.getPhotoFolder()).getNbPhotos();
+            int nbPreviousPhotos = 0;
+
+            List<Step> steps = stepRepository.findLastTwoStepsByElementId(element.getId());
+
+            if(steps.size() > 1){
+                nbPreviousPhotos = folderResource.getFolderSummary(steps.get(1).getRefPhotosFolder()).getNbPhotos();
+            }
+
+            ElementSummaryDto elementSummaryDto = elementSummaryMapper.fromElement(element, nbBasePhotos, nbPreviousPhotos);
+
             InventoryStateLabel inventoryLabelState = stepRepository.findLabelStateByElementId(elementSummaryDto.getId());
             String labelState = StateTypeEnum.NEW.getName();
             boolean checked = false;
@@ -153,13 +162,12 @@ public class InventoryService {
                 labelState = inventoryLabelState.getStateLabel();
             }
 
-            elementSummaryDto.setNbBasePhotos(0);
-            elementSummaryDto.setNbPreviousPhotos(0);
             elementSummaryDto.setPhoto("https://via.placeholder.com/150");
             elementSummaryDto.setState(labelState);
             elementSummaryDto.setChecked(checked);
+
+            return elementSummaryDto;
         }).toList();
-        return elementSummaryDtos;
     }
 
     public ElementDto getElement(UUID inventoryId, UUID elementId)
@@ -172,8 +180,7 @@ public class InventoryService {
         Element element = elementRepository.findByInventoryId(elementId, inventoryId).orElseThrow(()
                 -> new ElementNotFoundException(elementId, inventoryId));
 
-        Pageable pageable = PageRequest.of(0, 2);
-        List<Step> steps = stepRepository.findStepsByElementId(elementId, pageable);
+        List<Step> steps = stepRepository.findLastTwoStepsByElementId(elementId);
 
         FolderDto folderPreviousPhoto = null;
         if(steps.size() > 1){

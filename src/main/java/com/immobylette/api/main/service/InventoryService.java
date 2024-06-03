@@ -162,7 +162,9 @@ public class InventoryService {
                 labelState = inventoryLabelState.getStateLabel();
             }
 
-            elementSummaryDto.setPhoto("https://via.placeholder.com/150");
+            PhotoUrlDto photo = photoResource.getPhoto(elementSummaryDto.getPhoto());
+
+            elementSummaryDto.setPhoto(photo.getUrl());
             elementSummaryDto.setState(labelState);
             elementSummaryDto.setChecked(checked);
 
@@ -187,7 +189,9 @@ public class InventoryService {
             folderPreviousPhoto = folderResource.getFolder(steps.get(1).getRefPhotosFolder());
         }
 
-        PhotoUrlDto photo = photoResource.getPhoto(element.getPhoto());
+        String photoObjectName = String.format("%s/%s", element.getPhotoFolder().toString(), element.getPhoto().toString());
+
+        PhotoUrlDto photo = photoResource.getPhoto(photoObjectName);
         FolderDto folderBasePhoto = folderResource.getFolder(element.getPhotoFolder());
 
         return elementMapper.fromElement(element, photo, folderBasePhoto, folderPreviousPhoto);

@@ -27,9 +27,10 @@ public class PhotoResource {
     private final RestClient restClient;
     private final RestTemplate restTemplate;
 
-    public PhotoUrlDto getPhoto(UUID id) throws PhotoNotFoundException, GCPStorageException{
-        ResponseEntity<PhotoUrlDto> result = restClient.get()
-                .uri("/api/v1/photos/{id}", id)
+    public PhotoUrlDto getPhoto(String id) throws PhotoNotFoundException, GCPStorageException {
+        ResponseEntity<PhotoUrlDto> result = null;
+        result = restClient.get()
+                .uri(String.format("api/v1/photos/%s", id))
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
                     if (response.getStatusCode() == HttpStatus.NOT_FOUND) {

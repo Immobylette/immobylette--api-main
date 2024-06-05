@@ -67,6 +67,13 @@ public class InventoryController {
         stepService.createStep(id, idElement, step, photos);
     }
 
+    @PostMapping("/inventories/{id}/elements/{idElement}/same")
+    public void addSameStep(@PathVariable UUID id,
+                        @PathVariable UUID idElement
+    ) throws InventoryNotFoundException, ElementNotFoundException {
+        stepService.createSameStep(id, idElement);
+    }
+
     @GetMapping("/inventories/{id}/summary")
     public InventorySummaryDto getInventorySummary(@PathVariable UUID id)
             throws InventoryNotFoundException, InventoryNotCompletedException, FolderNotFoundException, GCPStorageException {

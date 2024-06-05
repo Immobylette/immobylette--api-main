@@ -31,4 +31,6 @@ public interface StepRepository extends JpaRepository<Step, UUID> {
 
     int countByInventoryId(UUID inventoryId);
 
+    Step findFirstByElementIdOrderByInventoryInventoryDateDesc(UUID elementId);
+
 }

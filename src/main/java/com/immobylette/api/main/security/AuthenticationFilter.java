@@ -21,7 +21,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String apiKey = request.getHeader("X-Api-Key");
 
-        if (apiKey.isEmpty() || !apiKey.equals(authConfig.getApiKey())){
+        if (apiKey == null || apiKey.isEmpty() || !apiKey.equals(authConfig.getApiKey())){
             logger.error("Unauthorized");
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Access Denied");
             return;

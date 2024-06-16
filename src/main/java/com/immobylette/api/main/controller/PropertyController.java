@@ -40,8 +40,8 @@ public class PropertyController {
     }
 
     @PostMapping("/properties/{id}/start")
-    public UUID startInventory(@PathVariable UUID id,
-                               @RequestBody Map<String, UUID> dataAgent) throws PropertyNotAssociatedWithAnyLeaseException, AgentNotFoundException {
+    public UUID startInventory(@PathVariable UUID id, @RequestBody Map<String, UUID> dataAgent)
+            throws PropertyNotAssociatedWithAnyLeaseException, AgentNotFoundException, InventoryAlreadyInProgressException {
         return inventoryService.createInventory(id, dataAgent.get("agent"));
     }
 }

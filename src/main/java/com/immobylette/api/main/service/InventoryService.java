@@ -13,13 +13,7 @@ import com.immobylette.api.main.entity.ThirdParty;
 import com.immobylette.api.main.entity.Element;
 import com.immobylette.api.main.entity.Lease;
 import com.immobylette.api.main.entity.SignatureInventoryThirdParty;
-import com.immobylette.api.main.exception.ElementNotFoundException;
-import com.immobylette.api.main.exception.FolderNotFoundException;
-import com.immobylette.api.main.exception.GCPStorageException;
-import com.immobylette.api.main.exception.InventoryNotFoundException;
-import com.immobylette.api.main.exception.RoomNotFoundException;
-import com.immobylette.api.main.exception.StepNotFoundException;
-import com.immobylette.api.main.exception.InventoryNotCompletedException;
+import com.immobylette.api.main.exception.*;
 import com.immobylette.api.main.mapper.ElementMapper;
 import com.immobylette.api.main.mapper.ElementSummaryMapper;
 import com.immobylette.api.main.mapper.InventorySummaryMapper;
@@ -34,8 +28,6 @@ import com.immobylette.api.main.repository.SignatureInventoryThirdPartyRepositor
 import com.immobylette.api.main.repository.ElementRepository;
 import com.immobylette.api.main.repository.StepRepository;
 import com.immobylette.api.main.entity.enums.InventoryTypeLabel;
-import com.immobylette.api.main.exception.AgentNotFoundException;
-import com.immobylette.api.main.exception.PropertyNotAssociatedWithAnyLeaseException;
 import com.immobylette.api.main.resource.FolderResource;
 import com.immobylette.api.main.resource.PhotoResource;
 import lombok.AllArgsConstructor;
@@ -77,8 +69,13 @@ public class InventoryService {
     private final InventorySummaryMapper inventorySummaryMapper;
 
 
-    public UUID createInventory(UUID propertyId, UUID agentId)  throws PropertyNotAssociatedWithAnyLeaseException, AgentNotFoundException {
+    public UUID createInventory(UUID propertyId, UUID agentId)
+            throws PropertyNotAssociatedWithAnyLeaseException, AgentNotFoundException, InventoryAlreadyInProgressException {
         Inventory inventory = new Inventory();
+
+        if(inventoryRepository.findCurrentInventoryByPropertyId(propertyId) != null ){
+            throw new InventoryAlreadyInProgressException(propertyId);
+        }
 
         Lease currentLease = leaseRepository.findFirstByPropertyIdOrderByRentalStartDateDesc(propertyId).orElseThrow(() -> new PropertyNotAssociatedWithAnyLeaseException(propertyId));
 
@@ -91,7 +88,7 @@ public class InventoryService {
         InventoryTypeLabel inventoryTypeLabel = InventoryTypeLabel.ENTREE;
 
         if(lastInventoryType != null) {
-            inventoryTypeLabel = inventoryRepository.findLastInventoryType(propertyId).equals(InventoryTypeLabel.ENTREE.getLabel())?InventoryTypeLabel.SORTIE:InventoryTypeLabel.ENTREE;
+            inventoryTypeLabel = lastInventoryType.equals(InventoryTypeLabel.ENTREE.getLabel())?InventoryTypeLabel.SORTIE:InventoryTypeLabel.ENTREE;
         }
 
         inventory.setInventoryType(inventoryTypeRepository.findByLabel(inventoryTypeLabel));

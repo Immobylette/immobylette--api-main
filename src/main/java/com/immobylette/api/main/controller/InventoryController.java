@@ -29,7 +29,7 @@ public class InventoryController {
 
     @GetMapping("/inventories/{id}/room")
     public RoomDto getCurrentRoom(@PathVariable UUID id)
-            throws InventoryNotFoundException, RoomNotFoundException {
+            throws InventoryNotFoundException, InspectionFinishedException {
         return inventoryService.getCurrentRoom(id);
     }
 

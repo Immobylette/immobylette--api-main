@@ -19,8 +19,8 @@ spring:
     hibernate.ddl-auto: none
   servlet:
     multipart:
-      max-file-size: 8MB
-      max-request-size: 8MB
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 server:
   port: 8080

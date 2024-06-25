@@ -22,8 +22,6 @@ L'architecture qui a été utilisée est celle des API REST accompagnée des sta
 
 ![MLD API Main](image.png)
 
-Puis les photos seront sauvegardées au sein d'un bucket GCP où le nom de l'objet sera : `{folder_id}/{image_id}`
-
 ## Fonctionnement
 
 ### Authentification

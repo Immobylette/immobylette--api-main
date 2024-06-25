@@ -30,10 +30,6 @@ Pour ajouter de la sécurité, l'authentification est basée sur la présence du
 
 ### Endpoints
 
-- GET /folders/{id}/photos
-
-Récupération d'une photo d'un dossier
-
 - GET /properties/{id}
 
 Récupération des informations d'une propriété 
@@ -44,11 +40,11 @@ Récupération des informations de l'ensemble des propriétés
 
 - POST /properties/{id}/start
 
-Démarage d'un état des lieux
+Démarrage d'un état des lieux
 
 - GET /inventories/{id}/room
 
-Récupération des informations sur la prochaine piece dans laquelle se rendre
+Récupération des informations sur la prochaine pièce dans laquelle se rendre
 
 - GET /inventories/{id}/elements
 
@@ -64,23 +60,23 @@ Récupération des informations d'un élément
 
 - GET /inventories/{id}/elements/{id}
 
-Permet de créer un nouvel état d'un élement 
+Permets de créer un nouvel état d'un élément 
 
 - POST /inventories/{id}/sign
 
-Permet de signer un état des lieux
+Permets de signer un état des lieux
 
 - POST /inventories/{id}/elements/{id}/same
 
-Permet de récuperer l'état de l'élément de l'état des lieux précedent
+Permets de récupérer l'état de l'élément de l'état des lieux précédent
 
 - GET /inventories/{id}/elements/{id}/summary
 
-Récuperer le résumé de l'état des lieux
+Récupérer le résumé de l'état des lieux
 
 - GET /third-parties/agents
 
-Récuperer les informations des agents immobiliers
+Récupérer les informations des agents immobiliers
 
 ## Build de l'application
 
@@ -95,8 +91,8 @@ Certaines variables d'environnement sont necessaire et sont définit danss le fi
 - **DB_USER** : username à utiliser
 - **DB_PASSWORD** : mot de passe de l'utilisatteur à utiliser
 - **API_KEY** : clé d'api pour pouvoir utiliser l'API
-- **PHOTO_API_URL** : clé d'api pour pouvoir utiliser l'API
-- **PHOTO_API_KEY** : clé d'api pour pouvoir utiliser l'API
+- **PHOTO_API_URL** : Url de l'API Photo
+- **PHOTO_API_KEY** : Api key de l'api Photo
 
 Note : pour le bon fonctionnement du projet, il est nécessaire que l'API_KEY fournit ici ainsi que dans l'API Photo soient les mêmes, sinon les deux API ne seront pas en mesure de communiquer entre elles.
 
